@@ -16,14 +16,14 @@
   --secondary-foreground: #0a0a0a;
   --muted: #f1f5f9;
   --muted-foreground: #64748b;
-  --accent: #2563eb;
+  --accent: #2664eb;
   --accent-foreground: #ffffff;
-  --accent-dark: #1d4ed8;
+  --accent-dark: #1a52d4;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
   --border: #e5e7eb;
   --input: #e5e7eb;
-  --ring: #2563eb;
+  --ring: #2664eb;
   --radius: 0.75rem;
   --sidebar: #ffffff;
   --sidebar-foreground: #0a0a0a;
@@ -32,7 +32,7 @@
   --sidebar-accent: #f8fafc;
   --sidebar-accent-foreground: #0a0a0a;
   --sidebar-border: #e5e7eb;
-  --sidebar-ring: #2563eb;
+  --sidebar-ring: #2664eb;
 }
 
 .dark {
@@ -48,7 +48,7 @@
   --secondary-foreground: #fafafa;
   --muted: #1f1f1f;
   --muted-foreground: #a3a3a3;
-  --accent: #2563eb;
+  --accent: #2664eb;
   --accent-foreground: #ffffff;
   --destructive: #7f1d1d;
   --destructive-foreground: #fca5a5;
@@ -212,7 +212,7 @@
 .step-connector {
   flex: 1;
   height: 2px;
-  background-image: linear-gradient(to right, #2563eb 50%, transparent 50%);
+  background-image: linear-gradient(to right, #2664eb 50%, transparent 50%);
   background-size: 10px 2px;
   background-repeat: repeat-x;
   min-width: 40px;

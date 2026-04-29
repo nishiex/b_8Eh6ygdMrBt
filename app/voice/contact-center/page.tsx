@@ -271,7 +271,7 @@ export default function ContactCenterPage() {
             {/* Tab nav */}
             <div className="flex flex-wrap gap-2 mb-10">
               {TABS.map((tab) => {
-                const { Icon } = tab
+                const { icon: Icon } = tab
                 const isActive = activeTab === tab.id
                 return (
                   <button
@@ -294,7 +294,7 @@ export default function ContactCenterPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
               <div>
                 <div className="inline-flex items-center gap-2 bg-blue-50 text-accent text-[10px] font-mono font-bold tracking-[2px] uppercase px-3 py-1.5 rounded-full mb-5">
-                  {(() => { const { Icon } = active; return <Icon className="h-3 w-3" strokeWidth={2.2} /> })()}
+                  {(() => { const { icon: Icon } = active; return <Icon className="h-3 w-3" strokeWidth={2.2} /> })()}
                   {active.label}
                 </div>
                 <h3 className="font-serif text-[26px] sm:text-[32px] font-bold leading-tight text-gray-900 mb-4 text-balance">
@@ -453,6 +453,6 @@ export default function ContactCenterPage() {
 
       </main>
       <Footer />
-    </>
+      </>
   )
 }

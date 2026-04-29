@@ -1,3 +1,5 @@
+"use client"
+
 import {
   ArrowRight,
   Check,
@@ -13,12 +15,19 @@ import {
   Clock,
   MessageSquare,
 } from "lucide-react"
+import { motion } from "framer-motion"
 import { AnnouncementBar } from "@/components/announcement-bar"
 import { MegaNav } from "@/components/mega-nav"
 import { Footer } from "@/components/footer"
 import { Testimonials } from "@/components/testimonials"
 import { Faq } from "@/components/faq"
 import { FinalCta } from "@/components/final-cta"
+
+const fadeUp = (delay = 0) => ({
+  initial: { opacity: 0, y: 28, filter: "blur(4px)" },
+  animate: { opacity: 1, y: 0, filter: "blur(0px)" },
+  transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1], delay },
+})
 
 /* ─── DATA ──────────────────────────────────────────────────────── */
 
@@ -113,27 +122,28 @@ export default function VoipWholesalePage() {
             }}
           />
 
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          <div className="relative max-w-7xl mx-auto px-4 pb-[25] sm:px-6 lg:px-8 w-full">
             <div className="max-w-[900px] pt-10">
+
               {/* Tag */}
-              <div className="inline-flex items-center gap-2 bg-white/8 border border-white/12 text-blue-300 text-xs font-semibold font-mono px-4 py-[6px] rounded-full mb-8">
+              <motion.div {...fadeUp(0)} className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-blue-300 text-xs font-semibold font-mono px-4 py-[6px] rounded-full mb-8">
                 <TrendingDown className="h-3 w-3" strokeWidth={2.2} />
                 WHOLESALE RATES · CARRIER-GRADE · SCALABLE VOLUME
-              </div>
+              </motion.div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.06] tracking-tight text-white text-balance mb-7">
+              <motion.h1 {...fadeUp(0.12)} className="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.06] tracking-tight text-white text-balance mb-7">
                 VoIP wholesale rates.{" "}
                 <span className="text-blue-400 italic">Without the carrier runaround.</span>
-              </h1>
+              </motion.h1>
 
-              <p className="text-[18px] sm:text-[20px] text-gray-300 font-mono leading-relaxed max-w-[680px] mb-3">
+              <motion.p {...fadeUp(0.26)} className="text-[18px] sm:text-[20px] text-gray-300 font-mono leading-relaxed max-w-[680px] mb-3">
                 Scalable wholesale routing for businesses running serious volume.
-              </p>
-              <p className="text-[15px] text-gray-500 font-mono leading-relaxed max-w-[620px] mb-12">
+              </motion.p>
+              <motion.p {...fadeUp(0.34)} className="text-[15px] text-gray-500 font-mono leading-relaxed max-w-[620px] mb-12">
                 The call center runs 50,000 minutes a month. They&apos;re paying retail rates designed for a 20-person office. Volume deserves volume pricing — and volume pricing deserves carrier-grade infrastructure behind it.
-              </p>
+              </motion.p>
 
-              <div className="flex flex-wrap items-center gap-3 mb-14">
+              <motion.div {...fadeUp(0.44)} className="flex flex-wrap items-center gap-3 mb-14">
                 <a
                   href="https://www.twiching.ai/contact"
                   className="group inline-flex items-center gap-2 bg-white text-black text-[15px] font-semibold font-mono pl-6 pr-2 py-2.5 rounded-full hover:bg-gray-100 transition-colors"
@@ -149,22 +159,38 @@ export default function VoipWholesalePage() {
                 >
                   See contact center tools
                 </a>
-              </div>
+              </motion.div>
 
-              {/* Inline stats */}
-              <div className="flex flex-wrap gap-6">
+              {/* Inline stats — staggered */}
+              <motion.div
+                initial="hidden"
+                animate="show"
+                variants={{
+                  hidden: {},
+                  show: { transition: { staggerChildren: 0.1, delayChildren: 0.58 } },
+                }}
+                className="flex flex-wrap gap-6"
+              >
                 {STATS.map(({ value, label, Icon }) => (
-                  <div key={label} className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-lg bg-white/8 grid place-items-center">
+                  <motion.div
+                    key={label}
+                    variants={{
+                      hidden: { opacity: 0, y: 14, filter: "blur(4px)" },
+                      show:  { opacity: 1, y: 0,  filter: "blur(0px)", transition: { duration: 0.5, ease: [0.22,1,0.36,1] } },
+                    }}
+                    className="flex items-center gap-2.5"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-white/10 grid place-items-center">
                       <Icon className="h-3.5 w-3.5 text-blue-400" strokeWidth={1.8} />
                     </div>
                     <div>
                       <div className="font-mono text-[13px] font-bold text-white">{value}</div>
                       <div className="font-mono text-[10px] text-gray-500">{label}</div>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
+
             </div>
           </div>
         </section>
@@ -207,14 +233,14 @@ export default function VoipWholesalePage() {
 
             <div className="rounded-3xl overflow-hidden ring-1 ring-white/8">
               {/* Header */}
-              <div className="grid grid-cols-2 bg-white/5 border-b border-white/8">
-                <div className="px-6 py-4 text-[11px] font-mono font-bold tracking-[2px] uppercase text-gray-500">The old way</div>
-                <div className="px-6 py-4 text-[11px] font-mono font-bold tracking-[2px] uppercase text-blue-400 border-l border-white/8">The Twiching way</div>
+              <div className="grid grid-cols-2 bg-white/10 border-b border-white/20">
+                <div className="px-6 py-4 text-[11px] font-mono font-bold tracking-[2px] uppercase text-gray-400">The old way</div>
+                <div className="px-6 py-4 text-[11px] font-mono font-bold tracking-[2px] uppercase text-blue-400 border-l border-white/20">The Twiching way</div>
               </div>
               {OLD_VS_NEW.map(({ old, new_ }, i) => (
                 <div
                   key={i}
-                  className={`grid grid-cols-2 border-b border-white/5 last:border-0 ${i % 2 === 0 ? "bg-white/3" : ""}`}
+                  className={`grid grid-cols-2 border-b border-white/10 last:border-0 ${i % 2 === 0 ? "bg-white/5" : ""}`}
                 >
                   <div className="px-6 py-5 flex items-start gap-3">
                     <div className="mt-1 w-4 h-4 rounded-full bg-red-500/20 grid place-items-center flex-shrink-0">
@@ -289,23 +315,23 @@ export default function VoipWholesalePage() {
               ].map(({ tier, desc, points, cta, featured }) => (
                 <div
                   key={tier}
-                  className={`rounded-3xl p-8 flex flex-col ${
+                  className={`rounded-2xl p-6 flex flex-col ${
                     featured
                       ? "bg-black text-white ring-1 ring-accent/40 shadow-[0_30px_60px_-30px_rgba(37,99,235,0.5)]"
                       : "bg-white ring-1 ring-gray-200/70 hover:ring-accent/20 hover:shadow-[0_20px_40px_-28px_rgba(37,99,235,0.2)] transition-all"
                   }`}
                 >
                   {featured && (
-                    <div className="inline-flex items-center gap-1 bg-accent text-white text-[10px] font-bold px-2.5 py-[3px] rounded-full font-mono self-start mb-4">
+                    <div className="inline-flex items-center gap-1 bg-accent text-white text-[10px] font-bold px-2.5 py-[3px] rounded-full font-mono self-start mb-3">
                       Most requested
                     </div>
                   )}
-                  <h3 className={`font-serif text-[22px] font-bold mb-3 ${featured ? "text-white" : "text-gray-900"}`}>{tier}</h3>
-                  <p className={`text-[13px] font-mono leading-relaxed mb-6 flex-1 ${featured ? "text-gray-400" : "text-gray-500"}`}>{desc}</p>
-                  <ul className="space-y-2.5 mb-8">
+                  <h3 className={`font-serif text-[19px] font-bold mb-2 ${featured ? "text-white" : "text-gray-900"}`}>{tier}</h3>
+                  <p className={`text-[12px] font-mono leading-relaxed mb-4 flex-1 ${featured ? "text-gray-400" : "text-gray-500"}`}>{desc}</p>
+                  <ul className="space-y-1.5 mb-5">
                     {points.map((p) => (
-                      <li key={p} className="flex items-start gap-2.5">
-                        <Check className={`h-3.5 w-3.5 mt-0.5 flex-shrink-0 ${featured ? "text-blue-400" : "text-accent"}`} strokeWidth={2.5} />
+                      <li key={p} className="flex items-start gap-2">
+                        <Check className={`h-3 w-3 mt-0.5 flex-shrink-0 ${featured ? "text-blue-400" : "text-accent"}`} strokeWidth={2.5} />
                         <span className={`text-[12px] font-mono ${featured ? "text-gray-300" : "text-gray-600"}`}>{p}</span>
                       </li>
                     ))}
@@ -356,12 +382,12 @@ export default function VoipWholesalePage() {
         {/* ── TESTIMONIALS ─────────────────────────────────────── */}
         <Testimonials
           quotes={TESTIMONIALS}
-          eyebrow="What wholesale customers say"
+           eyebrow="What wholesale customers say"
           heading="High-volume operators who stopped paying retail rates."
         />
 
         {/* ── FAQ ──────────────────────────────────────────────── */}
-        <Faq />
+        <Faq items={FAQS} heading="VoIP wholesale — questions answered." />
 
         {/* ── FINAL CTA ────────────────────────────────────────── */}
         <FinalCta

@@ -81,7 +81,7 @@ export function ComparisonTable() {
               key={name}
               className={`relative rounded-3xl p-7 transition-all duration-300 ${
                 featured
-                  ? "bg-gradient-to-br from-accent via-[#2f6cf0] to-[#1d4ed8] text-white shadow-[0_30px_60px_-25px_rgba(37,99,235,0.6)]"
+                  ? "bg-gradient-to-br from-accent via-[#2563eb] to-[#1d4ed8] text-white shadow-[0_30px_60px_-25px_rgba(37,99,235,0.6)]"
                   : "bg-white ring-1 ring-gray-200/70 hover:ring-gray-300 hover:shadow-[0_20px_40px_-28px_rgba(15,23,42,0.25)]"
               }`}
             >

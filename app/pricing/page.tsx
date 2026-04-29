@@ -16,6 +16,14 @@ const PLANS = [
     period: "/user/mo",
     best: "Freelancers, consultants, small teams",
     highlight: false,
+    highlights: [
+      "Unlimited US/Canada calling",
+      "Unlimited business SMS & MMS",
+      "Multi-level auto-attendant (IVR)",
+      "Voicemail-to-email + transcription",
+      "Business hours routing",
+      "2FA + STIR/SHAKEN + HIPAA",
+    ],
     features: {
       "Unlimited US/Canada calling": true,
       "Unlimited business SMS & MMS": true,
@@ -43,6 +51,14 @@ const PLANS = [
     period: "/user/mo",
     best: "Growing businesses",
     highlight: true,
+    highlights: [
+      "Everything in Starter",
+      "Omnichannel (WhatsApp/IG/FB)",
+      "CRM integrations",
+      "Supervisor tools",
+      "Mobile apps (iOS/Android)",
+      "Priority support",
+    ],
     features: {
       "Unlimited US/Canada calling": true,
       "Unlimited business SMS & MMS": true,
@@ -71,6 +87,14 @@ const PLANS = [
     period: "/user/mo",
     best: "Contact centers, large teams",
     highlight: false,
+    highlights: [
+      "Everything in Professional",
+      "Call recording",
+      "AI Receptionist",
+      "Auto Dialers",
+      "SOC 2 audit",
+      "Dedicated account manager",
+    ],
     features: {
       "Unlimited US/Canada calling": true,
       "Unlimited business SMS & MMS": true,
@@ -156,7 +180,7 @@ export default function PricingPage() {
           {PLANS.map((plan) => (
             <div
               key={plan.name}
-              className={`relative rounded-2xl border p-8 flex flex-col ${
+              className={`relative rounded-2xl border p-6 flex flex-col ${
                 plan.highlight
                   ? "border-accent shadow-xl shadow-accent/10 bg-white ring-1 ring-accent/20"
                   : "border-gray-100 bg-white"
@@ -167,30 +191,33 @@ export default function PricingPage() {
                   Most popular
                 </span>
               )}
-              <p className="font-mono text-[10px] font-bold tracking-[2px] uppercase text-gray-400 mb-4">{plan.best}</p>
-              <div className="flex items-end gap-1 mb-1">
-                <span className="font-serif text-[44px] font-bold text-gray-900 leading-none">{plan.price}</span>
-                <span className="font-mono text-[12px] text-gray-400 mb-2">{plan.period}</span>
+              <p className="font-mono text-[10px] font-bold tracking-[2px] uppercase text-gray-400 mb-3">{plan.best}</p>
+              <div className="flex items-end gap-1 mb-0.5">
+                <span className="font-serif text-[36px] font-bold text-gray-900 leading-none">{plan.price}</span>
+                <span className="font-mono text-[11px] text-gray-400 mb-1.5">{plan.period}</span>
               </div>
-              <p className="font-mono font-bold text-[18px] text-gray-800 mb-6">{plan.name}</p>
+              <p className="font-mono font-bold text-[15px] text-gray-800 mb-4">{plan.name}</p>
 
-              <ul className="space-y-2.5 flex-1 mb-8">
-                {FEATURE_ROWS.filter((f) => plan.features[f as keyof typeof plan.features]).map((f) => (
-                  <li key={f} className="flex items-start gap-2.5 text-[13px] font-mono text-gray-700">
-                    <Check className="h-3.5 w-3.5 text-accent mt-0.5 flex-shrink-0" strokeWidth={2.5} />
+              <ul className="space-y-1.5 flex-1 mb-5">
+                {plan.highlights.map((f) => (
+                  <li key={f} className="flex items-start gap-2 text-[12px] font-mono text-gray-700">
+                    <Check className="h-3 w-3 text-accent mt-0.5 flex-shrink-0" strokeWidth={2.5} />
                     {f}
                   </li>
                 ))}
               </ul>
+              <p className="text-[11px] font-mono text-gray-400 mb-4 -mt-2">
+                + more · <a href="#comparison" className="underline underline-offset-2 hover:text-accent">see full comparison ↓</a>
+              </p>
 
               <a href="/pricing"
-                className={`inline-flex items-center justify-center gap-2 text-[14px] font-semibold font-mono px-6 py-3.5 rounded-full transition-colors ${
+                className={`inline-flex items-center justify-center gap-2 text-[13px] font-semibold font-mono px-5 py-2.5 rounded-full transition-colors ${
                   plan.highlight
                     ? "bg-accent text-white hover:bg-blue-700"
                     : "border border-gray-200 text-gray-700 hover:border-accent hover:text-accent"
                 }`}
               >
-                Start Free Trial <ArrowRight className="h-4 w-4" />
+                Start Free Trial <ArrowRight className="h-3.5 w-3.5" />
               </a>
             </div>
           ))}
@@ -198,7 +225,7 @@ export default function PricingPage() {
       </section>
 
       {/* Comparison table */}
-      <section className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-16 border-t border-gray-100">
+      <section id="comparison" className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-16 border-t border-gray-100">
         <SectionHeading eyebrow="Full comparison" h2="Feature by feature" />
         <div className="overflow-x-auto rounded-2xl border border-gray-100">
           <table className="w-full text-[13px] font-mono min-w-[640px]">
@@ -273,21 +300,21 @@ export default function PricingPage() {
           <p className="font-serif text-[30px] sm:text-[36px] font-bold text-white mb-3 text-balance">
             14 days free. No risk.
           </p>
-          <p className="font-mono text-[16px] text-white/70 mb-8">
-            Credit card required. Cancel anytime. Compliance required to activate calling and SMS.
+          <p className="font-mono text-[15px] text-white/80 max-w-[520px] mx-auto mb-8 leading-relaxed">
+            Start your free trial today. No setup fees, no contracts, cancel anytime.
           </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <a href="/pricing"
-              className="inline-flex items-center gap-2 bg-white text-accent text-[15px] font-semibold font-mono px-8 py-4 rounded-full hover:bg-blue-50 transition-colors">
-              Start Free Trial <ArrowRight className="h-4 w-4" />
-            </a>
-            <a href="/contact"
-              className="inline-flex items-center gap-2 text-[15px] font-semibold font-mono text-white/80 px-8 py-4 rounded-full border border-white/30 hover:border-white transition-colors">
-              Talk to sales
-            </a>
-          </div>
+          <a
+            href="https://www.twiching.ai/pricing"
+            className="inline-flex items-center gap-2 bg-white text-accent text-[15px] font-semibold font-mono pl-6 pr-3 py-2.5 rounded-full hover:bg-gray-50 transition-colors"
+          >
+            Start Free Trial
+            <span className="grid place-items-center h-8 w-8 rounded-full bg-accent/10">
+              <ArrowRight className="h-4 w-4" strokeWidth={2.2} />
+            </span>
+          </a>
         </div>
       </section>
+
     </PageLayout>
   )
 }
