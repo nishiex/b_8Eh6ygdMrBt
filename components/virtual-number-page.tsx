@@ -327,83 +327,304 @@ const TINT_MAP: Record<LifecycleItem["tint"], { bg: string; ring: string; text: 
   sky:    { bg: "bg-sky-50",     ring: "ring-sky-100",     text: "text-sky-600",       dot: "bg-sky-500"       },
 }
 
-const COUNTRIES = [
-  { code: "+1",  flag: "🇺🇸", label: "US" },
-  { code: "+44", flag: "🇬🇧", label: "UK" },
-  { code: "+91", flag: "🇮🇳", label: "IN" },
-  { code: "+61", flag: "🇦🇺", label: "AU" },
+type Country = { code: string; flag: string; name: string; areaLabel: string; numDigits: number }
+
+const ALL_COUNTRIES: Country[] = [
+  { code: "+1",   flag: "🇺🇸", name: "United States",       areaLabel: "Area code",    numDigits: 3  },
+  { code: "+1",   flag: "🇨🇦", name: "Canada",              areaLabel: "Area code",    numDigits: 3  },
+  { code: "+44",  flag: "🇬🇧", name: "United Kingdom",      areaLabel: "Area code",    numDigits: 3  },
+  { code: "+61",  flag: "🇦🇺", name: "Australia",           areaLabel: "Area code",    numDigits: 2  },
+  { code: "+91",  flag: "🇮🇳", name: "India",               areaLabel: "STD code",     numDigits: 4  },
+  { code: "+49",  flag: "🇩🇪", name: "Germany",             areaLabel: "Area code",    numDigits: 3  },
+  { code: "+33",  flag: "🇫🇷", name: "France",              areaLabel: "Area code",    numDigits: 2  },
+  { code: "+39",  flag: "🇮🇹", name: "Italy",               areaLabel: "Area code",    numDigits: 2  },
+  { code: "+34",  flag: "🇪🇸", name: "Spain",               areaLabel: "Area code",    numDigits: 2  },
+  { code: "+55",  flag: "🇧🇷", name: "Brazil",              areaLabel: "Area code",    numDigits: 2  },
+  { code: "+52",  flag: "🇲🇽", name: "Mexico",              areaLabel: "Area code",    numDigits: 3  },
+  { code: "+81",  flag: "🇯🇵", name: "Japan",               areaLabel: "Area code",    numDigits: 2  },
+  { code: "+82",  flag: "🇰🇷", name: "South Korea",         areaLabel: "Area code",    numDigits: 2  },
+  { code: "+86",  flag: "🇨🇳", name: "China",               areaLabel: "Area code",    numDigits: 3  },
+  { code: "+65",  flag: "🇸🇬", name: "Singapore",           areaLabel: "Prefix",       numDigits: 1  },
+  { code: "+64",  flag: "🇳🇿", name: "New Zealand",         areaLabel: "Area code",    numDigits: 2  },
+  { code: "+27",  flag: "🇿🇦", name: "South Africa",        areaLabel: "Area code",    numDigits: 2  },
+  { code: "+234", flag: "🇳🇬", name: "Nigeria",             areaLabel: "Area code",    numDigits: 3  },
+  { code: "+254", flag: "🇰🇪", name: "Kenya",               areaLabel: "Area code",    numDigits: 3  },
+  { code: "+971", flag: "🇦🇪", name: "UAE",                 areaLabel: "Area code",    numDigits: 2  },
+  { code: "+966", flag: "🇸🇦", name: "Saudi Arabia",        areaLabel: "Area code",    numDigits: 2  },
+  { code: "+20",  flag: "🇪🇬", name: "Egypt",               areaLabel: "Area code",    numDigits: 2  },
+  { code: "+212", flag: "🇲🇦", name: "Morocco",             areaLabel: "Area code",    numDigits: 3  },
+  { code: "+31",  flag: "🇳🇱", name: "Netherlands",         areaLabel: "Area code",    numDigits: 2  },
+  { code: "+32",  flag: "🇧🇪", name: "Belgium",             areaLabel: "Area code",    numDigits: 2  },
+  { code: "+41",  flag: "🇨🇭", name: "Switzerland",         areaLabel: "Area code",    numDigits: 2  },
+  { code: "+43",  flag: "🇦🇹", name: "Austria",             areaLabel: "Area code",    numDigits: 2  },
+  { code: "+45",  flag: "🇩🇰", name: "Denmark",             areaLabel: "Prefix",       numDigits: 2  },
+  { code: "+46",  flag: "🇸🇪", name: "Sweden",              areaLabel: "Area code",    numDigits: 2  },
+  { code: "+47",  flag: "🇳🇴", name: "Norway",              areaLabel: "Prefix",       numDigits: 2  },
+  { code: "+48",  flag: "🇵🇱", name: "Poland",              areaLabel: "Area code",    numDigits: 2  },
+  { code: "+351", flag: "🇵🇹", name: "Portugal",            areaLabel: "Area code",    numDigits: 3  },
+  { code: "+353", flag: "🇮🇪", name: "Ireland",             areaLabel: "Area code",    numDigits: 2  },
+  { code: "+358", flag: "🇫🇮", name: "Finland",             areaLabel: "Area code",    numDigits: 2  },
+  { code: "+420", flag: "🇨🇿", name: "Czech Republic",      areaLabel: "Area code",    numDigits: 3  },
+  { code: "+36",  flag: "🇭🇺", name: "Hungary",             areaLabel: "Area code",    numDigits: 2  },
+  { code: "+30",  flag: "🇬🇷", name: "Greece",              areaLabel: "Area code",    numDigits: 4  },
+  { code: "+90",  flag: "🇹🇷", name: "Turkey",              areaLabel: "Area code",    numDigits: 3  },
+  { code: "+7",   flag: "🇷🇺", name: "Russia",              areaLabel: "Area code",    numDigits: 3  },
+  { code: "+380", flag: "🇺🇦", name: "Ukraine",             areaLabel: "Area code",    numDigits: 3  },
+  { code: "+62",  flag: "🇮🇩", name: "Indonesia",           areaLabel: "Area code",    numDigits: 3  },
+  { code: "+63",  flag: "🇵🇭", name: "Philippines",         areaLabel: "Area code",    numDigits: 2  },
+  { code: "+60",  flag: "🇲🇾", name: "Malaysia",            areaLabel: "Area code",    numDigits: 2  },
+  { code: "+66",  flag: "🇹🇭", name: "Thailand",            areaLabel: "Area code",    numDigits: 2  },
+  { code: "+84",  flag: "🇻🇳", name: "Vietnam",             areaLabel: "Area code",    numDigits: 2  },
+  { code: "+92",  flag: "🇵🇰", name: "Pakistan",            areaLabel: "Area code",    numDigits: 3  },
+  { code: "+880", flag: "🇧🇩", name: "Bangladesh",          areaLabel: "Area code",    numDigits: 3  },
+  { code: "+94",  flag: "🇱🇰", name: "Sri Lanka",           areaLabel: "Area code",    numDigits: 2  },
+  { code: "+56",  flag: "🇨🇱", name: "Chile",               areaLabel: "Area code",    numDigits: 2  },
+  { code: "+54",  flag: "🇦🇷", name: "Argentina",           areaLabel: "Area code",    numDigits: 3  },
+  { code: "+57",  flag: "🇨🇴", name: "Colombia",            areaLabel: "Area code",    numDigits: 2  },
+  { code: "+51",  flag: "🇵🇪", name: "Peru",                areaLabel: "Area code",    numDigits: 2  },
+  { code: "+58",  flag: "🇻🇪", name: "Venezuela",           areaLabel: "Area code",    numDigits: 3  },
+  { code: "+593", flag: "🇪🇨", name: "Ecuador",             areaLabel: "Area code",    numDigits: 2  },
+  { code: "+972", flag: "🇮🇱", name: "Israel",              areaLabel: "Area code",    numDigits: 2  },
+  { code: "+98",  flag: "🇮🇷", name: "Iran",                areaLabel: "Area code",    numDigits: 3  },
 ]
 
+type NumberResult = { number: string; type: "Local" | "Mobile" | "Toll-Free"; carrier: string }
+
+const CARRIERS: Record<string, string[]> = {
+  "+1":   ["Verizon", "AT&T", "T-Mobile"],
+  "+44":  ["BT", "EE", "Vodafone UK"],
+  "+61":  ["Telstra", "Optus", "Vodafone AU"],
+  "+91":  ["Jio", "Airtel", "BSNL"],
+  "+49":  ["Deutsche Telekom", "Vodafone DE", "O2 Germany"],
+  "+33":  ["Orange", "SFR", "Bouygues"],
+  default: ["Local Carrier", "National Carrier", "Regional Carrier"],
+}
+
+function generateNumbers(country: Country, areaCode: string): NumberResult[] {
+  const seed = areaCode.split("").reduce((a, c) => a + c.charCodeAt(0), 0)
+  const carriers = CARRIERS[country.code] ?? CARRIERS.default
+  const types: NumberResult["type"][] = ["Local", "Mobile", "Toll-Free"]
+  return Array.from({ length: 6 }, (_, i) => {
+    const base = ((seed * (i + 7) * 1337) % 9000) + 1000
+    const ext  = ((seed * (i + 3) * 31)   % 9000) + 1000
+    return {
+      number:  `${country.code} (${areaCode}) ${base}-${ext}`,
+      type:    types[(seed + i) % types.length],
+      carrier: carriers[(seed + i) % carriers.length],
+    }
+  })
+}
+
 function NumberSearchBar() {
-  const [country, setCountry] = useState(0)
-  const [areaCode, setAreaCode] = useState("")
-  const [open, setOpen] = useState(false)
+  const [countryIdx, setCountryIdx] = useState(0)
+  const [areaCode, setAreaCode]     = useState("")
+  const [open, setOpen]             = useState(false)
+  const [filterQ, setFilterQ]       = useState("")
+  const [results, setResults]       = useState<NumberResult[] | null>(null)
+  const [searching, setSearching]   = useState(false)
+  const [claimed, setClaimed]       = useState<Set<string>>(new Set())
+  const dropdownRef                 = useRef<HTMLDivElement>(null)
+
+  const country  = ALL_COUNTRIES[countryIdx]
+  const filtered = ALL_COUNTRIES.filter(
+    (c) => c.name.toLowerCase().includes(filterQ.toLowerCase()) || c.code.includes(filterQ)
+  )
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handler(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener("mousedown", handler)
+    return () => document.removeEventListener("mousedown", handler)
+  }, [])
+
+  function handleSearch() {
+    if (!areaCode) return
+    setSearching(true)
+    setResults(null)
+    setTimeout(() => {
+      setResults(generateNumbers(country, areaCode))
+      setSearching(false)
+    }, 820)
+  }
+
+  function handleClaim(number: string) {
+    setClaimed((prev) => new Set(prev).add(number))
+  }
 
   return (
-    <div className="relative px-4 pt-4 pb-3 border-b border-gray-100">
-      <p className="text-[10px] font-mono font-bold tracking-[1.5px] uppercase text-gray-400 mb-2.5">
-        Find a number
-      </p>
-      <div className="flex items-stretch gap-2">
-        {/* Country selector */}
-        <div className="relative">
-          <button
+    <div className="border-b border-gray-100">
+      {/* Search row */}
+      <div className="px-4 pt-4 pb-3">
+        <p className="text-[10px] font-mono font-bold tracking-[1.5px] uppercase text-gray-400 mb-2.5">
+          Find a number
+        </p>
+        <div className="flex items-stretch gap-2">
+
+          {/* Country selector */}
+          <div className="relative" ref={dropdownRef}>
+            <button
+              type="button"
+              onClick={() => { setOpen((v) => !v); setFilterQ("") }}
+              className="h-10 flex items-center gap-1.5 px-3 rounded-xl bg-gray-50 ring-1 ring-gray-200 text-[13px] font-mono font-semibold text-gray-700 hover:bg-gray-100 transition whitespace-nowrap"
+            >
+              <span className="text-base leading-none">{country.flag}</span>
+              <span>{country.code}</span>
+              <ChevronDown className={`h-3 w-3 text-gray-400 transition-transform ${open ? "rotate-180" : ""}`} strokeWidth={2.2} />
+            </button>
+
+            <AnimatePresence>
+              {open && (
+                <motion.div
+                  initial={{ opacity: 0, y: -6, scale: 0.97 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -6, scale: 0.97 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute left-0 top-full mt-1 z-30 w-64 bg-white rounded-2xl ring-1 ring-gray-200 shadow-xl overflow-hidden"
+                >
+                  {/* Filter input */}
+                  <div className="px-3 pt-3 pb-2 border-b border-gray-100">
+                    <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-gray-50 ring-1 ring-gray-200">
+                      <Search className="h-3 w-3 text-gray-400 flex-shrink-0" strokeWidth={2.5} />
+                      <input
+                        autoFocus
+                        type="text"
+                        placeholder="Search country…"
+                        value={filterQ}
+                        onChange={(e) => setFilterQ(e.target.value)}
+                        className="flex-1 text-[12px] font-mono bg-transparent text-gray-700 placeholder:text-gray-400 outline-none"
+                      />
+                    </div>
+                  </div>
+                  {/* List */}
+                  <ul className="max-h-48 overflow-y-auto divide-y divide-gray-50">
+                    {filtered.length === 0 ? (
+                      <li className="px-4 py-3 text-[12px] text-gray-400 font-mono">No results</li>
+                    ) : filtered.map((c, i) => {
+                      const realIdx = ALL_COUNTRIES.findIndex((x) => x.name === c.name)
+                      return (
+                        <li key={`${c.code}-${c.name}`}>
+                          <button
+                            type="button"
+                            onClick={() => { setCountryIdx(realIdx); setOpen(false); setResults(null); setAreaCode("") }}
+                            className={`w-full flex items-center gap-2.5 px-3 py-2 text-[12px] font-mono text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition ${realIdx === countryIdx ? "bg-blue-50 text-blue-700" : ""}`}
+                          >
+                            <span className="text-base leading-none w-5 text-center">{c.flag}</span>
+                            <span className="flex-1 text-left font-medium truncate">{c.name}</span>
+                            <span className="text-gray-400 font-semibold">{c.code}</span>
+                          </button>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Area code input */}
+          <input
+            type="text"
+            inputMode="numeric"
+            maxLength={country.numDigits + 1}
+            placeholder={country.areaLabel}
+            value={areaCode}
+            onChange={(e) => { setAreaCode(e.target.value.replace(/\D/g, "")); setResults(null) }}
+            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+            className="flex-1 h-10 px-3.5 rounded-xl bg-gray-50 ring-1 ring-gray-200 text-[13px] font-mono text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 transition min-w-0"
+          />
+
+          {/* Search button */}
+          <motion.button
             type="button"
-            onClick={() => setOpen((v) => !v)}
-            className="h-10 flex items-center gap-1.5 px-3 rounded-xl bg-gray-50 ring-1 ring-gray-200 text-[13px] font-mono font-semibold text-gray-700 hover:bg-gray-100 transition"
+            whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+            onClick={handleSearch}
+            disabled={!areaCode || searching}
+            className="h-10 flex items-center gap-1.5 px-4 rounded-xl bg-[#2563eb] text-white text-[12px] font-mono font-bold tracking-wide shadow-[0_4px_14px_-4px_rgba(37,99,235,0.55)] hover:bg-[#1d4ed8] transition disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
           >
-            <span className="text-base leading-none">{COUNTRIES[country].flag}</span>
-            <span>{COUNTRIES[country].code}</span>
-            <ChevronDown className="h-3 w-3 text-gray-400" strokeWidth={2.2} />
-          </button>
-          <AnimatePresence>
-            {open && (
-              <motion.ul
-                initial={{ opacity: 0, y: -6, scale: 0.97 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -6, scale: 0.97 }}
-                transition={{ duration: 0.15 }}
-                className="absolute left-0 top-full mt-1 z-20 bg-white rounded-xl ring-1 ring-gray-200 shadow-lg overflow-hidden"
-              >
-                {COUNTRIES.map((c, i) => (
-                  <li key={c.code}>
-                    <button
-                      type="button"
-                      onClick={() => { setCountry(i); setOpen(false) }}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-[12px] font-mono text-gray-700 hover:bg-gray-50 transition"
-                    >
-                      <span className="text-base leading-none">{c.flag}</span>
-                      <span className="font-semibold">{c.code}</span>
-                      <span className="text-gray-400">({c.label})</span>
-                    </button>
-                  </li>
-                ))}
-              </motion.ul>
-            )}
-          </AnimatePresence>
+            {searching
+              ? <RefreshCw className="h-3.5 w-3.5 animate-spin" strokeWidth={2.5} />
+              : <Search    className="h-3.5 w-3.5" strokeWidth={2.5} />
+            }
+            {searching ? "Searching…" : "Search"}
+          </motion.button>
         </div>
-
-        {/* Area code input */}
-        <input
-          type="text"
-          inputMode="numeric"
-          maxLength={3}
-          placeholder="Area code"
-          value={areaCode}
-          onChange={(e) => setAreaCode(e.target.value.replace(/\D/g, ""))}
-          className="flex-1 h-10 px-3.5 rounded-xl bg-gray-50 ring-1 ring-gray-200 text-[13px] font-mono text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-        />
-
-        {/* Search button */}
-        <motion.button
-          type="button"
-          whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-          className="h-10 flex items-center gap-1.5 px-4 rounded-xl bg-[#2563eb] text-white text-[12px] font-mono font-bold tracking-wide shadow-[0_4px_14px_-4px_rgba(37,99,235,0.55)] hover:bg-[#1d4ed8] transition"
-        >
-          <Search className="h-3.5 w-3.5" strokeWidth={2.5} />
-          Search
-        </motion.button>
       </div>
+
+      {/* Results panel */}
+      <AnimatePresence>
+        {results && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="overflow-hidden"
+          >
+            <div className="px-4 pb-3">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-[10px] font-mono font-bold tracking-[1.5px] uppercase text-gray-400">
+                  {results.length} numbers available · {country.flag} {country.name} {country.code} ({areaCode})
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setResults(null)}
+                  className="text-[10px] font-mono text-gray-400 hover:text-gray-600 transition"
+                >
+                  Clear
+                </button>
+              </div>
+              <ul className="space-y-1.5 max-h-44 overflow-y-auto pr-0.5">
+                {results.map((r, i) => (
+                  <motion.li
+                    key={r.number}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.055, duration: 0.25 }}
+                    className="flex items-center gap-2.5 rounded-xl bg-gray-50 ring-1 ring-gray-100 px-3 py-2 hover:ring-blue-200 hover:bg-blue-50/40 transition group"
+                  >
+                    {/* Number */}
+                    <span className="flex-1 text-[12px] font-mono font-semibold text-gray-900 truncate">
+                      {r.number}
+                    </span>
+
+                    {/* Type badge */}
+                    <span className={`text-[9px] font-mono font-bold tracking-[1.2px] uppercase px-2 py-0.5 rounded-full flex-shrink-0 ${
+                      r.type === "Local"    ? "bg-blue-50   text-blue-600   ring-1 ring-blue-100"  :
+                      r.type === "Mobile"   ? "bg-emerald-50 text-emerald-600 ring-1 ring-emerald-100" :
+                                              "bg-amber-50  text-amber-600  ring-1 ring-amber-100"
+                    }`}>
+                      {r.type}
+                    </span>
+
+                    {/* Carrier */}
+                    <span className="text-[10px] font-mono text-gray-400 hidden sm:block flex-shrink-0 truncate max-w-[72px]">
+                      {r.carrier}
+                    </span>
+
+                    {/* Get Number CTA */}
+                    {claimed.has(r.number) ? (
+                      <span className="flex items-center gap-1 text-[10px] font-mono font-bold text-emerald-600 flex-shrink-0">
+                        <Check className="h-3 w-3" strokeWidth={2.5} /> Added
+                      </span>
+                    ) : (
+                      <motion.button
+                        type="button"
+                        whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
+                        onClick={() => handleClaim(r.number)}
+                        className="flex-shrink-0 text-[10px] font-mono font-bold px-2.5 py-1 rounded-lg bg-[#2563eb] text-white hover:bg-[#1d4ed8] transition opacity-0 group-hover:opacity-100"
+                      >
+                        Get
+                      </motion.button>
+                    )}
+                  </motion.li>
+                ))}
+              </ul>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
