@@ -189,49 +189,44 @@ export function VirtualNumberPage() {
 function HeroSection() {
   return (
     <section
-      className="relative overflow-hidden pt-20 pb-0 px-[5%]"
+      className="relative overflow-hidden pt-20 pb-16 px-[5%] bg-white"
       aria-labelledby="hero-h1"
-      style={{ background: "linear-gradient(180deg, #0b1220 0%, #0d1526 60%, #f8fafc 60%)" }}
     >
-      {/* Ambient glows */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[480px] rounded-full"
-          style={{ background: "radial-gradient(ellipse, rgba(59,130,246,0.12) 0%, transparent 70%)", filter: "blur(1px)" }} />
-        <div className="absolute top-16 right-0 w-[400px] h-[320px] rounded-full"
-          style={{ background: "radial-gradient(ellipse, rgba(139,92,246,0.08) 0%, transparent 70%)" }} />
-        {/* subtle grid overlay */}
-        <div className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
-            backgroundSize: "48px 48px",
-          }} />
-      </div>
+      {/* Subtle dot-grid background */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0"
+        style={{
+          backgroundImage: "radial-gradient(circle, #e2e8f0 1px, transparent 1px)",
+          backgroundSize: "28px 28px",
+          opacity: 0.6,
+        }} />
+      {/* Blue tint top center */}
+      <div aria-hidden="true" className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[360px] rounded-full"
+        style={{ background: "radial-gradient(ellipse, rgba(38,100,235,0.06) 0%, transparent 70%)" }} />
 
       <div className="max-w-[1200px] mx-auto relative">
-        {/* Eyebrow + heading + sub — centered, white on dark */}
+        {/* Eyebrow + heading + sub */}
         <div className="text-center mb-10">
           <div className="vn-eyebrow inline-flex items-center gap-2 border text-[11px] font-bold font-mono tracking-[1.5px] uppercase px-4 py-2 rounded-full mb-8"
-            style={{ background: "rgba(59,130,246,0.1)", borderColor: "rgba(59,130,246,0.25)", color: "#60a5fa" }}>
+            style={{ background: "#eff6ff", borderColor: "#bfdbfe", color: "#2664eb" }}>
             <span aria-hidden="true" className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-70 animate-ping" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-blue-400" />
+              <span className="absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-70 animate-ping" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-blue-600" />
             </span>
             Virtual Phone Numbers
           </div>
 
-          <h1 id="hero-h1" className="vn-h1 font-serif text-[48px] sm:text-[58px] lg:text-[70px] font-semibold leading-[1.02] tracking-tight max-w-[820px] mx-auto mb-6 overflow-hidden"
-            style={{ color: "#f1f5f9" }}>
+          <h1 id="hero-h1" className="vn-h1 font-serif text-[48px] sm:text-[58px] lg:text-[70px] font-semibold leading-[1.02] tracking-tight max-w-[820px] mx-auto mb-6 overflow-hidden text-slate-900">
             {"A phone number in".split(" ").map((word, i) => (
               <span key={`l1-${i}`} className="inline-block mr-[0.18em]">{word}</span>
             ))}
-            <span className="italic block" style={{ color: "#60a5fa" }}>
+            <span className="italic block" style={{ color: "#2664eb" }}>
               {"any area code.".split(" ").map((word, i) => (
                 <span key={`l2-${i}`} className="inline-block mr-[0.18em]">{word}</span>
               ))}
             </span>
           </h1>
 
-          <p className="vn-sub text-[17px] max-w-[520px] mx-auto mb-9 leading-relaxed" style={{ color: "#94a3b8" }}>
+          <p className="vn-sub text-[17px] text-slate-500 max-w-[520px] mx-auto mb-9 leading-relaxed">
             Virtual numbers give your business nationwide reach — routed to any device — without the office rent.
           </p>
 
@@ -239,8 +234,7 @@ function HeroSection() {
             <PrimaryButton href="/pricing">Start 14-day free trial</PrimaryButton>
             <motion.a href="/pricing"
               whileHover={{ y: -1 }} whileTap={{ scale: 0.97 }}
-              className="inline-flex items-center gap-1.5 text-[15px] font-semibold transition-colors"
-              style={{ color: "#64748b" }}
+              className="inline-flex items-center gap-1.5 text-[15px] font-semibold text-slate-500 hover:text-accent transition-colors"
             >
               See pricing <ChevronRight aria-hidden="true" className="h-4 w-4" strokeWidth={2} />
             </motion.a>
@@ -249,22 +243,16 @@ function HeroSection() {
           <dl className="flex flex-wrap justify-center gap-8 mb-12">
             {STATS.map(({ value, label }) => (
               <div key={label} className="vn-stat text-center">
-                <dt className="font-serif text-[26px] font-bold leading-none" style={{ color: "#f1f5f9" }}>{value}</dt>
-                <dd className="text-[10px] font-mono mt-1 uppercase tracking-wider" style={{ color: "#475569" }}>{label}</dd>
+                <dt className="font-serif text-[26px] font-bold leading-none text-slate-900">{value}</dt>
+                <dd className="text-[10px] font-mono mt-1 uppercase tracking-wider text-slate-400">{label}</dd>
               </div>
             ))}
           </dl>
         </div>
 
-        {/* Dashboard visual — hero centerpiece */}
-        <div className="vn-dashboard relative">
-          {/* top fade chrome glow */}
-          <div aria-hidden className="absolute -top-4 left-1/2 -translate-x-1/2 w-3/4 h-8 rounded-full opacity-40"
-            style={{ background: "radial-gradient(ellipse, rgba(59,130,246,0.6), transparent 70%)", filter: "blur(12px)" }} />
+        {/* Dashboard visual */}
+        <div className="vn-dashboard">
           <VirtualDashboard />
-          {/* bottom blend into white */}
-          <div aria-hidden className="absolute bottom-0 left-0 right-0 h-20 pointer-events-none"
-            style={{ background: "linear-gradient(to bottom, transparent, #f8fafc)" }} />
         </div>
       </div>
     </section>
