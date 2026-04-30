@@ -92,61 +92,142 @@ function Chevron({ open }: { open: boolean }) {
 
 function ColHeading({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[10px] font-mono font-bold tracking-[1.4px] uppercase text-gray-400 mb-3">
+    <p className="text-[10px] font-mono font-bold tracking-[1.4px] uppercase text-slate-400 mb-2.5 px-1">
       {children}
     </p>
   )
 }
 
-function FeaturedCard({ headline, sub }: { headline: string; sub: string }) {
-  return (
-    <div className="rounded-2xl bg-[#F5F5F5] p-5 flex flex-col justify-between h-full min-h-[180px]">
-      <div>
-        <p className="text-[11px] font-mono font-bold tracking-[1.2px] uppercase text-[#2563EB] mb-3">Featured</p>
-        <p className="text-[15px] font-semibold text-black leading-snug mb-2">{headline}</p>
-        <p className="text-[13px] text-gray-500 leading-relaxed">{sub}</p>
-      </div>
-      <a
-        href="/pricing"
-        className="mt-4 inline-flex items-center gap-1.5 bg-[#2563EB] text-white text-[13px] font-semibold font-mono px-4 py-2 rounded-full hover:bg-[#1d4ed8] transition-colors self-start"
-      >
-        Start Free Trial
-        <ArrowRight className="h-3.5 w-3.5" strokeWidth={2.2} />
-      </a>
-    </div>
-  )
-}
-
-function LinkRow({
-  title, desc, Icon, href, close,
-}: { title: string; desc?: string; Icon: React.ElementType; href: string; close: () => void }) {
+/**
+ * NavCard — replaces LinkRow.
+ * Accepts an optional `image` prop (URL string) that renders a small
+ * thumbnail above the text block. Designed to be flexible for any
+ * menu section that wants to show a product screenshot or illustration.
+ */
+function NavCard({
+  title, desc, Icon, href, close, image,
+}: {
+  title: string
+  desc?: string
+  Icon: React.ElementType
+  href: string
+  close: () => void
+  image?: string
+}) {
   return (
     <a
       href={href}
       onClick={close}
-      className="flex items-start gap-3 p-2.5 rounded-xl hover:bg-slate-50 transition-colors group"
+      className="group flex items-start gap-3 rounded-xl px-3 py-2.5 transition-all duration-150
+                 hover:bg-slate-50 border border-transparent hover:border-slate-100"
     >
-      <span className="mt-0.5 w-9 h-9 rounded-full bg-blue-50 text-[#2563EB] grid place-items-center flex-shrink-0 group-hover:bg-blue-100 transition-colors">
+      {/* Icon badge */}
+      <span className="mt-0.5 flex-shrink-0 w-8 h-8 rounded-lg bg-blue-50 text-[#2563EB]
+                       grid place-items-center group-hover:bg-blue-100 transition-colors duration-150">
         <Icon className="h-3.5 w-3.5" strokeWidth={1.8} />
       </span>
-      <span>
-        <span className="block text-[13px] font-semibold text-black leading-tight">{title}</span>
-        {desc && <span className="block text-[11px] text-gray-500 mt-0.5 leading-relaxed">{desc}</span>}
+
+      <span className="flex-1 min-w-0">
+        {/* Optional image slot */}
+        {image && (
+          <span className="block mb-2 rounded-lg overflow-hidden border border-slate-100 aspect-video">
+            <img src={image} alt="" className="w-full h-full object-cover" aria-hidden="true" />
+          </span>
+        )}
+        <span className="flex items-center justify-between gap-2">
+          <span className="block text-[13px] font-semibold text-slate-900 leading-tight">{title}</span>
+          <ArrowRight
+            className="h-3 w-3 text-slate-300 flex-shrink-0 opacity-0 -translate-x-1
+                       group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-150"
+            strokeWidth={2}
+          />
+        </span>
+        {desc && (
+          <span className="block text-[11.5px] text-slate-500 mt-0.5 leading-relaxed">{desc}</span>
+        )}
       </span>
     </a>
   )
 }
 
-function SmallLinkRow({
+/**
+ * FeaturedPanel — replaces FeaturedCard.
+ * Accepts an optional `image` prop (URL string) that renders a
+ * dedicated image zone above the content area. Without an image,
+ * the panel falls back to a subtle pattern fill.
+ */
+function FeaturedPanel({
+  headline, sub, image, ctaLabel = "Start Free Trial", ctaHref = "/pricing",
+}: {
+  headline: string
+  sub: string
+  image?: string
+  ctaLabel?: string
+  ctaHref?: string
+}) {
+  return (
+    <div className="rounded-2xl overflow-hidden border border-slate-100 flex flex-col h-full bg-[#0f172a]">
+      {/* Image zone — swap out the src to customise per-section */}
+      <div className="relative w-full aspect-[16/9] bg-slate-800 overflow-hidden flex-shrink-0">
+        {image ? (
+          <img
+            src={image}
+            alt=""
+            aria-hidden="true"
+            className="w-full h-full object-cover opacity-80"
+          />
+        ) : (
+          /* Fallback: subtle dot-grid pattern */
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px)",
+              backgroundSize: "20px 20px",
+            }}
+          />
+        )}
+        {/* Gradient overlay for text legibility */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-transparent to-transparent" />
+      </div>
+
+      {/* Text + CTA */}
+      <div className="flex flex-col flex-1 p-5">
+        <p className="text-[10px] font-mono font-bold tracking-[1.4px] uppercase text-blue-400 mb-2">
+          Featured
+        </p>
+        <p className="text-[14px] font-semibold text-white leading-snug mb-1.5">{headline}</p>
+        <p className="text-[12px] text-slate-400 leading-relaxed flex-1">{sub}</p>
+        <a
+          href={ctaHref}
+          className="mt-4 inline-flex items-center gap-1.5 bg-[#2563EB] text-white
+                     text-[12px] font-semibold px-4 py-2 rounded-full self-start
+                     hover:bg-[#1d4ed8] transition-colors"
+        >
+          {ctaLabel}
+          <ArrowRight className="h-3 w-3" strokeWidth={2.2} />
+        </a>
+      </div>
+    </div>
+  )
+}
+
+/**
+ * SmallNavItem — compact variant for Solutions / industry/role grids.
+ * Kept separate from NavCard to preserve the tighter grid layout.
+ */
+function SmallNavItem({
   title, Icon, href, close,
 }: { title: string; Icon: React.ElementType; href: string; close: () => void }) {
   return (
     <a
       href={href}
       onClick={close}
-      className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl hover:bg-slate-50 transition-colors text-[13px] font-medium text-gray-700 hover:text-black group"
+      className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl hover:bg-slate-50
+                 transition-colors text-[13px] font-medium text-slate-700 hover:text-slate-900 group"
     >
-      <span className="w-6 h-6 rounded-md bg-slate-100 text-gray-500 grid place-items-center flex-shrink-0 group-hover:bg-blue-50 group-hover:text-[#2563EB] transition-colors">
+      <span className="w-6 h-6 rounded-md bg-slate-100 text-slate-500 grid place-items-center
+                       flex-shrink-0 group-hover:bg-blue-50 group-hover:text-[#2563EB] transition-colors">
         <Icon className="h-3 w-3" strokeWidth={1.8} />
       </span>
       {title}
@@ -157,63 +238,61 @@ function SmallLinkRow({
 /* ─── Product panel ───────────────────────────────────────────── */
 function ProductPanel({ close }: { close: () => void }) {
   return (
-    <div className="max-w-[1200px] mx-auto px-[5%] py-10 grid grid-cols-4 gap-12">
-      {/* Phone Numbers */}
+    <div className="max-w-[1200px] mx-auto px-[5%] py-8 grid grid-cols-[1fr_1fr_1fr_220px] gap-6">
+      {/* Col 1 — Phone Numbers */}
       <div>
         <ColHeading>Phone Numbers</ColHeading>
-        <ul className="space-y-1">
+        <ul className="space-y-0.5">
           {numbersCol1.map(({ title, desc, Icon, href }) => (
             <li key={title}>
-              <LinkRow title={title} desc={desc} Icon={Icon} href={href} close={close} />
+              <NavCard title={title} desc={desc} Icon={Icon} href={href} close={close} />
             </li>
           ))}
         </ul>
       </div>
 
-      {/* Voice */}
+      {/* Col 2 — Voice */}
       <div>
         <ColHeading>Voice</ColHeading>
-        <ul className="space-y-1">
+        <ul className="space-y-0.5">
           {voiceCol1.map(({ title, desc, Icon, href }) => (
             <li key={title}>
-              <LinkRow title={title} desc={desc} Icon={Icon} href={href} close={close} />
+              <NavCard title={title} desc={desc} Icon={Icon} href={href} close={close} />
             </li>
           ))}
         </ul>
       </div>
 
-      {/* Messaging + Call Features */}
-      <div className="space-y-8">
+      {/* Col 3 — Messaging + Call Features stacked */}
+      <div className="space-y-5">
         <div>
           <ColHeading>Messaging</ColHeading>
-          <ul className="space-y-1">
+          <ul className="space-y-0.5">
             {messagingCol1.map(({ title, desc, Icon, href }) => (
               <li key={title}>
-                <LinkRow title={title} desc={desc} Icon={Icon} href={href} close={close} />
+                <NavCard title={title} desc={desc} Icon={Icon} href={href} close={close} />
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <ColHeading>Call Features</ColHeading>
+          <ul className="space-y-0.5">
+            {voiceFeatures.map(({ title, Icon, href }) => (
+              <li key={title}>
+                <NavCard title={title} Icon={Icon} href={href} close={close} />
               </li>
             ))}
           </ul>
         </div>
       </div>
-      <div>
-        <ColHeading>Call Features</ColHeading>
-        <ul className="space-y-1">
-          {voiceFeatures.map(({ title, Icon, href }) => (
-            <li key={title}>
-              <a
-                href={href}
-                onClick={close}
-                className="flex items-center gap-3 px-2.5 py-2 rounded-xl hover:bg-slate-50 transition-colors group"
-              >
-                <span className="w-8 h-8 rounded-full bg-blue-50 text-[#2563EB] grid place-items-center flex-shrink-0 group-hover:bg-blue-100 transition-colors">
-                  <Icon className="h-3.5 w-3.5" strokeWidth={1.8} />
-                </span>
-                <span className="text-[13px] font-semibold text-black">{title}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
+
+      {/* Col 4 — Featured editorial panel (swap `image` prop to customise) */}
+      {/* To add an image: pass image="https://your-url.com/screenshot.jpg" to FeaturedPanel */}
+      <FeaturedPanel
+        headline="Any area code. Any device. Instant."
+        sub="Virtual numbers with STIR/SHAKEN verification, routed to wherever your team works."
+      />
     </div>
   )
 }
@@ -221,14 +300,14 @@ function ProductPanel({ close }: { close: () => void }) {
 /* ─── Solutions panel ─────────────────────────────────────────── */
 function SolutionsPanel({ close }: { close: () => void }) {
   return (
-    <div className="max-w-[1200px] mx-auto px-[5%] py-8 grid grid-cols-3 gap-8">
+    <div className="max-w-[1200px] mx-auto px-[5%] py-8 grid grid-cols-[1fr_1fr_220px] gap-6">
       {/* By Industry */}
       <div>
         <ColHeading>By Industry</ColHeading>
         <ul className="grid grid-cols-2 gap-0.5">
           {solutionsByIndustry.map(({ title, Icon, href }) => (
             <li key={title}>
-              <SmallLinkRow title={title} Icon={Icon} href={href} close={close} />
+              <SmallNavItem title={title} Icon={Icon} href={href} close={close} />
             </li>
           ))}
         </ul>
@@ -240,14 +319,14 @@ function SolutionsPanel({ close }: { close: () => void }) {
         <ul className="space-y-0.5">
           {solutionsByRole.map(({ title, Icon, href }) => (
             <li key={title}>
-              <SmallLinkRow title={title} Icon={Icon} href={href} close={close} />
+              <SmallNavItem title={title} Icon={Icon} href={href} close={close} />
             </li>
           ))}
         </ul>
       </div>
 
-      {/* Featured */}
-      <FeaturedCard
+      {/* Featured panel — swap image prop to add a visual */}
+      <FeaturedPanel
         headline="Built for every team, every industry."
         sub="Sales, remote, healthcare, finance — Twiching adapts to how your team works."
       />
@@ -258,18 +337,18 @@ function SolutionsPanel({ close }: { close: () => void }) {
 /* ─── Company panel ───────────────────────────────────────────── */
 function CompanyPanel({ close }: { close: () => void }) {
   return (
-    <div className="max-w-[1200px] mx-auto px-[5%] py-8 grid grid-cols-3 gap-8">
+    <div className="max-w-[1200px] mx-auto px-[5%] py-8 grid grid-cols-[1fr_1fr_220px] gap-6">
       <div className="col-span-2">
         <ColHeading>Company</ColHeading>
         <ul className="grid grid-cols-2 gap-0.5">
           {companyLinks.map(({ title, desc, Icon, href }) => (
             <li key={title}>
-              <LinkRow title={title} desc={desc} Icon={Icon} href={href} close={close} />
+              <NavCard title={title} desc={desc} Icon={Icon} href={href} close={close} />
             </li>
           ))}
         </ul>
       </div>
-      <FeaturedCard
+      <FeaturedPanel
         headline="Built on trust, driven by innovation."
         sub="Learn about the team building the future of business communications."
       />
@@ -280,13 +359,13 @@ function CompanyPanel({ close }: { close: () => void }) {
 /* ─── Resources panel ─────────────────────────────────────────── */
 function ResourcesPanel({ close }: { close: () => void }) {
   return (
-    <div className="max-w-[1200px] mx-auto px-[5%] py-8 grid grid-cols-3 gap-8">
+    <div className="max-w-[1200px] mx-auto px-[5%] py-8 grid grid-cols-[1fr_1fr_220px] gap-6">
       <div>
         <ColHeading>Learn</ColHeading>
         <ul className="space-y-0.5">
           {resourcesCol1.map(({ title, desc, Icon, href }) => (
             <li key={title}>
-              <LinkRow title={title} desc={desc} Icon={Icon} href={href} close={close} />
+              <NavCard title={title} desc={desc} Icon={Icon} href={href} close={close} />
             </li>
           ))}
         </ul>
@@ -296,12 +375,12 @@ function ResourcesPanel({ close }: { close: () => void }) {
         <ul className="space-y-0.5">
           {resourcesCol2.map(({ title, desc, Icon, href }) => (
             <li key={title}>
-              <LinkRow title={title} desc={desc} Icon={Icon} href={href} close={close} />
+              <NavCard title={title} desc={desc} Icon={Icon} href={href} close={close} />
             </li>
           ))}
         </ul>
       </div>
-      <FeaturedCard
+      <FeaturedPanel
         headline="Everything you need to get up and running."
         sub="Docs, guides, case studies, and expert support — all in one place."
       />
