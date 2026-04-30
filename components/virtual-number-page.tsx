@@ -12,7 +12,7 @@ import {
   Globe, Smartphone, Zap, Shield, PhoneCall,
   ArrowRight, Check, ChevronRight,
   ShieldCheck, HeartPulse, Activity,
-  PhoneIncoming, MessageSquare, Bot, Hash,
+  Search, ShoppingCart, PhoneIncoming, MessageSquare, RefreshCw, Mail, ChevronDown,
 } from "lucide-react"
 import { Faq } from "@/components/faq"
 import { AnnouncementBar } from "@/components/announcement-bar"
@@ -296,32 +296,116 @@ function HeroSection() {
   )
 }
 
-/* ─── Live Showcase (right column of hero) ──────────────────── */
+/* ─── Number Lifecycle Dashboard (right column of hero) ─────── */
 
-type ActivityItem = {
+type LifecycleStage = "search" | "buy" | "call" | "sms" | "forward" | "control"
+
+type LifecycleItem = {
   id: number
-  kind: "call" | "sms" | "ai" | "number"
+  stage: LifecycleStage
   Icon: LucideIcon
   title: string
   detail: string
   chip: string
-  tint: "blue" | "green" | "violet" | "amber"
+  tint: "blue" | "green" | "violet" | "amber" | "sky"
 }
 
-const ACTIVITY_FEED: ActivityItem[] = [
-  { id: 1, kind: "call",   Icon: PhoneIncoming, title: "Inbound · +1 415 555 0138",       detail: "Routed to Sales · Atlanta · answered in 0.9s",      chip: "LIVE",    tint: "green"  },
-  { id: 2, kind: "sms",    Icon: MessageSquare, title: "SMS delivered · +1 212 555 0194", detail: "OTP code · Verizon · 340ms",                        chip: "SENT",    tint: "blue"   },
-  { id: 3, kind: "ai",     Icon: Bot,           title: "AI receptionist · +44 20 7946",   detail: "After-hours · booked demo for Thursday 10am",       chip: "HANDLED", tint: "violet" },
-  { id: 4, kind: "number", Icon: Hash,          title: "Local number ported · +1 303 555",detail: "Denver · CenturyLink · STIR/SHAKEN registered",     chip: "READY",   tint: "amber"  },
-  { id: 5, kind: "call",   Icon: PhoneIncoming, title: "Inbound · +1 646 555 0102",       detail: "Routed to Support · Brooklyn · answered in 1.2s",   chip: "LIVE",    tint: "green"  },
-  { id: 6, kind: "sms",    Icon: MessageSquare, title: "Campaign blast · 12,480 recipients", detail: "Marketing · 10DLC · 98.4% delivery",              chip: "SENT",    tint: "blue"   },
+const LIFECYCLE_FEED: LifecycleItem[] = [
+  { id: 1, stage: "search",  Icon: Search,        title: "Searching +1 (415) numbers…",        detail: "San Francisco · 12 numbers available instantly",          chip: "SEARCH",  tint: "blue"   },
+  { id: 2, stage: "buy",     Icon: ShoppingCart,  title: "Number available: +1 415 555 0192",  detail: "Area code 415 · STIR/SHAKEN ready · activating now",      chip: "PURCHASE", tint: "green"  },
+  { id: 3, stage: "call",    Icon: PhoneIncoming, title: "Incoming call → +1 415 555 0192",    detail: "Routed to mobile · Atlanta · answered in 0.9s",            chip: "ROUTED",  tint: "sky"    },
+  { id: 4, stage: "sms",     Icon: MessageSquare, title: "SMS received → +1 415 555 0192",     detail: "Forwarded to john@company.com · delivered 340ms",          chip: "FWDED",   tint: "violet" },
+  { id: 5, stage: "forward", Icon: RefreshCw,     title: "Call forwarding updated",            detail: "Primary: mobile · Fallback: voicemail · saved",            chip: "UPDATED", tint: "amber"  },
+  { id: 6, stage: "control", Icon: Mail,          title: "Voicemail → email transcript",       detail: "2m 14s · transcribed · sent to inbox in 3s",              chip: "DONE",    tint: "green"  },
 ]
 
-const TINT_MAP: Record<ActivityItem["tint"], { bg: string; ring: string; text: string; dot: string }> = {
-  blue:   { bg: "bg-blue-50",    ring: "ring-blue-100",    text: "text-accent",       dot: "bg-accent"        },
+const TINT_MAP: Record<LifecycleItem["tint"], { bg: string; ring: string; text: string; dot: string }> = {
+  blue:   { bg: "bg-blue-50",    ring: "ring-blue-100",    text: "text-blue-600",     dot: "bg-blue-500"      },
   green:  { bg: "bg-emerald-50", ring: "ring-emerald-100", text: "text-emerald-600",  dot: "bg-emerald-500"   },
   violet: { bg: "bg-violet-50",  ring: "ring-violet-100",  text: "text-violet-600",   dot: "bg-violet-500"    },
   amber:  { bg: "bg-amber-50",   ring: "ring-amber-100",   text: "text-amber-600",    dot: "bg-amber-500"     },
+  sky:    { bg: "bg-sky-50",     ring: "ring-sky-100",     text: "text-sky-600",       dot: "bg-sky-500"       },
+}
+
+const COUNTRIES = [
+  { code: "+1",  flag: "🇺🇸", label: "US" },
+  { code: "+44", flag: "🇬🇧", label: "UK" },
+  { code: "+91", flag: "🇮🇳", label: "IN" },
+  { code: "+61", flag: "🇦🇺", label: "AU" },
+]
+
+function NumberSearchBar() {
+  const [country, setCountry] = useState(0)
+  const [areaCode, setAreaCode] = useState("")
+  const [open, setOpen] = useState(false)
+
+  return (
+    <div className="relative px-4 pt-4 pb-3 border-b border-gray-100">
+      <p className="text-[10px] font-mono font-bold tracking-[1.5px] uppercase text-gray-400 mb-2.5">
+        Find a number
+      </p>
+      <div className="flex items-stretch gap-2">
+        {/* Country selector */}
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            className="h-10 flex items-center gap-1.5 px-3 rounded-xl bg-gray-50 ring-1 ring-gray-200 text-[13px] font-mono font-semibold text-gray-700 hover:bg-gray-100 transition"
+          >
+            <span className="text-base leading-none">{COUNTRIES[country].flag}</span>
+            <span>{COUNTRIES[country].code}</span>
+            <ChevronDown className="h-3 w-3 text-gray-400" strokeWidth={2.2} />
+          </button>
+          <AnimatePresence>
+            {open && (
+              <motion.ul
+                initial={{ opacity: 0, y: -6, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -6, scale: 0.97 }}
+                transition={{ duration: 0.15 }}
+                className="absolute left-0 top-full mt-1 z-20 bg-white rounded-xl ring-1 ring-gray-200 shadow-lg overflow-hidden"
+              >
+                {COUNTRIES.map((c, i) => (
+                  <li key={c.code}>
+                    <button
+                      type="button"
+                      onClick={() => { setCountry(i); setOpen(false) }}
+                      className="w-full flex items-center gap-2 px-3 py-2 text-[12px] font-mono text-gray-700 hover:bg-gray-50 transition"
+                    >
+                      <span className="text-base leading-none">{c.flag}</span>
+                      <span className="font-semibold">{c.code}</span>
+                      <span className="text-gray-400">({c.label})</span>
+                    </button>
+                  </li>
+                ))}
+              </motion.ul>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Area code input */}
+        <input
+          type="text"
+          inputMode="numeric"
+          maxLength={3}
+          placeholder="Area code"
+          value={areaCode}
+          onChange={(e) => setAreaCode(e.target.value.replace(/\D/g, ""))}
+          className="flex-1 h-10 px-3.5 rounded-xl bg-gray-50 ring-1 ring-gray-200 text-[13px] font-mono text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+        />
+
+        {/* Search button */}
+        <motion.button
+          type="button"
+          whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+          className="h-10 flex items-center gap-1.5 px-4 rounded-xl bg-[#2563eb] text-white text-[12px] font-mono font-bold tracking-wide shadow-[0_4px_14px_-4px_rgba(37,99,235,0.55)] hover:bg-[#1d4ed8] transition"
+        >
+          <Search className="h-3.5 w-3.5" strokeWidth={2.5} />
+          Search
+        </motion.button>
+      </div>
+    </div>
+  )
 }
 
 function LiveShowcase() {
@@ -341,14 +425,14 @@ function LiveShowcase() {
 
   const [cursor, setCursor] = useState(0)
   useEffect(() => {
-    const id = setInterval(() => setCursor((c) => (c + 1) % ACTIVITY_FEED.length), 2400)
+    const id = setInterval(() => setCursor((c) => (c + 1) % LIFECYCLE_FEED.length), 2400)
     return () => clearInterval(id)
   }, [])
 
   const visible = [
-    ACTIVITY_FEED[cursor % ACTIVITY_FEED.length],
-    ACTIVITY_FEED[(cursor + 1) % ACTIVITY_FEED.length],
-    ACTIVITY_FEED[(cursor + 2) % ACTIVITY_FEED.length],
+    LIFECYCLE_FEED[cursor % LIFECYCLE_FEED.length],
+    LIFECYCLE_FEED[(cursor + 1) % LIFECYCLE_FEED.length],
+    LIFECYCLE_FEED[(cursor + 2) % LIFECYCLE_FEED.length],
   ]
 
   return (
@@ -389,16 +473,19 @@ function LiveShowcase() {
               <span className="w-2.5 h-2.5 rounded-full bg-yellow-300/80" />
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-300/80" />
             </div>
-            <span className="ml-2 text-[11px] font-mono text-gray-400 tracking-wider">app.twiching.ai / live</span>
+            <span className="ml-2 text-[11px] font-mono text-gray-400 tracking-wider">app.twiching.ai / numbers</span>
           </div>
           <div className="flex items-center gap-2">
             <ShowcasePulseDot />
-            <span className="text-[11px] font-mono font-bold tracking-[1.5px] uppercase text-emerald-600">Live activity</span>
+            <span className="text-[11px] font-mono font-bold tracking-[1.5px] uppercase text-emerald-600">Number Lifecycle</span>
           </div>
         </div>
 
-        {/* Rolling feed */}
-        <div className="relative px-4 py-4 min-h-[240px]">
+        {/* Number search bar */}
+        <NumberSearchBar />
+
+        {/* Rolling lifecycle feed */}
+        <div className="relative px-4 py-4 min-h-[220px]">
           <div className="space-y-2.5">
             <AnimatePresence mode="popLayout" initial={false}>
               {visible.map((item, i) => (
@@ -428,7 +515,7 @@ function LiveShowcase() {
   )
 }
 
-function ShowcaseActivityRow({ item }: { item: ActivityItem }) {
+function ShowcaseActivityRow({ item }: { item: LifecycleItem }) {
   const t = TINT_MAP[item.tint]
   const { Icon } = item
   return (
