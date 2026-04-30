@@ -1,89 +1,163 @@
 import { Metadata } from "next"
 import { PageLayout } from "@/components/page-layout"
-import { PageHero, SectionHeading, NextStepBand } from "@/components/page-parts"
+import {
+  PageHero,
+  NarrativeSection,
+  SectionHeading,
+  StatBar,
+  ValueGrid,
+  FeatureSplit,
+  ImageSlot,
+  NextStepBand,
+} from "@/components/page-parts"
 import { Faq } from "@/components/faq"
-import { Check } from "lucide-react"
+import { Shield, Clock, Smartphone, MessageSquare, PhoneForwarded } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "Business Phone Numbers · Professional Lines | Twiching",
-  description: "Dedicated business phone numbers that separate work from personal. 14-day free trial.",
+  description:
+    "Dedicated business phone numbers that separate work from personal. 14-day free trial.",
 }
 
-const FEATURES = [
-  "A professional identity separate from your personal mobile",
-  "Voicemail greeting that says your business name",
-  "Business hours routing — silence work calls after 6 PM without silencing family",
-  "SMS from your business number, not your cell",
-  "Call forwarding to any device you already own",
+const STATS = [
+  { value: "$480", label: "Avg. annual saving", note: "vs. legacy carrier" },
+  { value: "0",    label: "Hardware required",  note: "works on any device" },
+  { value: "24h",  label: "Setup time",         note: "activate in minutes" },
+  { value: "100%", label: "Personal privacy",   note: "number never exposed" },
 ]
 
-const FAQS = [
-  { q: "Does it expose my personal number?", a: "No. All calls and SMS route through your Twiching business number." },
-  { q: "Can I have multiple business numbers?", a: "Yes. One account, multiple numbers." },
-  { q: "Can I forward calls to my personal phone?", a: "Yes. Forward to any device while keeping the business number as caller ID." },
+const FEATURES = [
+  {
+    icon: Shield,
+    title: "Personal privacy",
+    body: "Your personal mobile number is never exposed to clients. All calls and SMS route through the business number.",
+  },
+  {
+    icon: Clock,
+    title: "Business-hours routing",
+    body: "Silence work calls after 6 PM without silencing family. Set hours, set rules, go offline — on your schedule.",
+  },
+  {
+    icon: Smartphone,
+    title: "Any device",
+    body: "Forward calls to any device you already own — mobile, softphone, or desk phone. No hardware required.",
+  },
+  {
+    icon: MessageSquare,
+    title: "Business SMS",
+    body: "Text clients from your business number, not your personal cell. Full two-way SMS on every line.",
+  },
+  {
+    icon: PhoneForwarded,
+    title: "Professional voicemail",
+    body: "A greeting that says your business name — not &quot;Hey, it&apos;s me, leave a message.&quot; Separate voicemail per line.",
+  },
+]
+
+const WHO_USES = [
+  { label: "Freelancers and consultants",            desc: "Clients reach a work line, not your personal cell" },
+  { label: "Small business owners",                  desc: "Professional identity without a physical office" },
+  { label: "Real estate agents",                     desc: "Listing contacts that don't follow you for years" },
+  { label: "Attorneys and accountants",              desc: "Separate billing entity from personal availability" },
+  { label: "Sales reps running a side business",     desc: "Clean separation between employer line and personal brand" },
 ]
 
 export default function BusinessNumberPage() {
   return (
     <PageLayout>
+      {/* ── Hero — two-column with image slot ──────────────────── */}
       <PageHero
+        eyebrow="Business Phone Numbers"
         h1="A business number that means business."
-        sub="Dedicated professional lines. No personal number exposure. No blurred lines."
-        trustItems={["Dedicated line", "Forwards to any device", "Business hours routing"]}
+        sub="Dedicated professional lines. No personal number exposure. No blurred lines between work and life."
+        trustItems={["Dedicated line", "Forwards to any device", "Business hours routing", "Two-way SMS"]}
         primaryCta={{ label: "Start 14-day free trial", href: "/pricing" }}
+        secondaryCta={{ label: "See pricing", href: "/pricing" }}
+        image={{
+          // Replace src with your own image to populate the hero visual
+          // src: "/images/business-hero.jpg",
+          alt: "Business phone number on a professional device",
+        }}
       />
 
-      <section className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        <div className="max-w-[680px] font-mono text-[15px] text-gray-600 leading-relaxed space-y-4">
-          <p>She won the contract. Then the client called her personal mobile at 9 PM on a Sunday.</p>
-          <p>There was no boundary. Once it broke, it didn&apos;t rebuild.</p>
-          <p>A business phone number isn&apos;t about appearing more professional. It&apos;s about protecting the life you&apos;re trying to live while you grow what you&apos;re trying to build.</p>
+      {/* ── Narrative opener ───────────────────────────────────── */}
+      <NarrativeSection
+        paragraphs={[
+          "She won the contract. Then the client called her personal mobile at 9 PM on a Sunday.",
+          "There was no boundary. Once it broke, it didn&apos;t rebuild.",
+          "A business phone number isn&apos;t about appearing more professional. It&apos;s about protecting the life you&apos;re trying to live while you grow what you&apos;re trying to build.",
+        ]}
+      />
+
+      {/* ── Stats ──────────────────────────────────────────────── */}
+      <StatBar stats={STATS} />
+
+      {/* ── Feature grid ───────────────────────────────────────── */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <SectionHeading
+          eyebrow="What you get"
+          h2="Everything a dedicated business line gives you"
+          sub="Five features that separate a professional line from just forwarding your cell."
+        />
+        <ValueGrid items={FEATURES} cols={3} />
+      </section>
+
+      {/* ── Feature split: cost comparison ─────────────────────── */}
+      <section className="bg-gray-50 border-y border-gray-100 py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <FeatureSplit
+            eyebrow="Cost savings"
+            heading="Fraction of a legacy carrier line"
+            body="A traditional business line through a legacy carrier runs $40–$80/month — plus installation, a desk phone, and a multi-year contract. A Twiching business number on Starter is a fraction of that. No hardware. No contract."
+            points={[
+              "No desk phone or PBX hardware needed",
+              "Month-to-month — cancel anytime",
+              "Works on the device you already carry",
+              "Annual saving: $360–$840 vs. legacy carrier",
+            ]}
+            cta={{ label: "See pricing", href: "/pricing" }}
+            image={{
+              // src: "/images/business-savings.jpg",
+              alt: "Business phone number cost comparison",
+            }}
+          />
         </div>
       </section>
 
-      <section className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-16 border-t border-gray-100">
+      {/* ── Who uses business numbers ───────────────────────────── */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           <div>
-            <SectionHeading eyebrow="What you get" h2="What a dedicated business number gives you" />
-            <ul className="space-y-3">
-              {FEATURES.map((f) => (
-                <li key={f} className="flex items-start gap-3 font-mono text-[14px] text-gray-700">
-                  <Check className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                  {f}
-                </li>
+            <SectionHeading eyebrow="Who uses it" h2="Who gets the most from a business number" />
+            <div className="space-y-3">
+              {WHO_USES.map(({ label, desc }) => (
+                <div
+                  key={label}
+                  className="flex items-start gap-4 p-4 rounded-xl border border-gray-100 bg-white hover:border-accent/30 transition-colors"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent mt-2 flex-shrink-0" />
+                  <div>
+                    <p className="font-semibold text-[14px] text-gray-900 mb-0.5">{label}</p>
+                    <p className="text-[13px] text-gray-500">{desc}</p>
+                  </div>
+                </div>
               ))}
-            </ul>
-            <div className="mt-8">
-              <SectionHeading eyebrow="Who uses it" h2="Who uses business numbers" />
-              <ul className="space-y-2">
-                {["Freelancers and consultants", "Small business owners", "Real estate agents", "Attorneys and accountants in solo practice", "Sales reps running a side business"].map((u) => (
-                  <li key={u} className="flex items-center gap-2 font-mono text-[13px] text-gray-600">
-                    <span className="w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0" />{u}
-                  </li>
-                ))}
-              </ul>
             </div>
           </div>
 
-          <div className="bg-gray-50 rounded-2xl p-8">
-            <SectionHeading eyebrow="Cost savings" h2="The value breakdown" />
-            <p className="font-mono text-[14px] text-gray-600 leading-relaxed mb-5">
-              A traditional business line through a legacy carrier runs <strong className="text-gray-900">$40–$80/month</strong> — plus installation, a desk phone, and a multi-year contract.
-            </p>
-            <p className="font-mono text-[14px] text-gray-600 leading-relaxed mb-5">
-              A Twiching business number on Starter is a fraction of that. No hardware. No contract.
-            </p>
-            <div className="bg-white rounded-xl p-5 border border-gray-100">
-              <p className="font-mono text-[11px] font-bold tracking-[2px] uppercase text-gray-400 mb-2">Annual saving</p>
-              <p className="font-serif text-[32px] font-bold text-accent">$360–$840</p>
-              <p className="font-mono text-[12px] text-gray-500 mt-1">for a solo practice vs. legacy carrier</p>
-            </div>
-          </div>
+          {/* Image slot — swap in a screenshot or product photo */}
+          <ImageSlot
+            alt="Business phone number dashboard or app screenshot"
+            aspect="aspect-[4/3]"
+            // src="/images/business-who-uses.jpg"
+          />
         </div>
       </section>
 
       <Faq />
       <NextStepBand
+        heading="Your business, your number, your hours."
+        sub="No personal number exposure. No hardware. Activate in minutes."
         primary={{ label: "Start 14-day free trial", href: "/pricing" }}
         secondary={{ label: "Explore second numbers", href: "/phone-numbers/second-number" }}
       />

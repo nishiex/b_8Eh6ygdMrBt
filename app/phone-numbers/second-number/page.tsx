@@ -1,85 +1,174 @@
 import { Metadata } from "next"
 import { PageLayout } from "@/components/page-layout"
-import { PageHero, SectionHeading, NextStepBand } from "@/components/page-parts"
+import {
+  PageHero,
+  NarrativeSection,
+  SectionHeading,
+  StatBar,
+  ValueGrid,
+  FeatureSplit,
+  ImageSlot,
+  NextStepBand,
+} from "@/components/page-parts"
 import { Faq } from "@/components/faq"
-import { Check } from "lucide-react"
+import { Smartphone, VolumeX, MessageSquare, Clock } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "Second Phone Number · No Second SIM Required | Twiching",
-  description: "Get a second number for work on your existing phone. No SIM swap. 14-day free trial.",
+  description:
+    "Get a second number for work on your existing phone. No SIM swap. 14-day free trial.",
 }
 
-const FEATURES = [
-  "Different voicemail greetings per line",
-  "Silence work after hours without silencing personal",
-  "Text clients from your work number",
-  "Forward to voicemail when you're off the clock",
+const STATS = [
+  { value: "0",    label: "Extra hardware",    note: "works on your current phone" },
+  { value: "0",    label: "SIM swaps needed",  note: "cloud-routed" },
+  { value: "2",    label: "Lines on 1 device", note: "personal + work" },
+  { value: "24h",  label: "Activation time",   note: "most are instant" },
 ]
 
-const FAQS = [
-  { q: "Do I need a new phone?", a: "No." },
-  { q: "Is a second SIM required?", a: "No. Cloud-routed. Works on your existing device." },
-  { q: "Can people tell it's a second number?", a: "No. It looks and behaves like any other line." },
-  { q: "Can I text from it?", a: "Yes. Two-way SMS supported." },
+const FEATURES = [
+  {
+    icon: Smartphone,
+    title: "No second phone",
+    body: "Your current device handles both lines. Incoming calls show which number was dialed so you know how to answer.",
+  },
+  {
+    icon: VolumeX,
+    title: "Silence work after hours",
+    body: "Put the work line on do-not-disturb at 6 PM without silencing family, friends, or emergencies on your personal line.",
+  },
+  {
+    icon: MessageSquare,
+    title: "Text from work number",
+    body: "Full two-way SMS from the second line. Clients reply to your work number — not your personal cell.",
+  },
+  {
+    icon: Clock,
+    title: "Separate voicemail",
+    body: "A professional greeting on the work line. Your casual personal greeting stays exactly where it belongs.",
+  },
+]
+
+const WHO_USES = [
+  {
+    label: "Real estate agents",
+    desc: "Public listing contacts that stop following you after the deal closes.",
+  },
+  {
+    label: "Freelancers",
+    desc: "Client calls go to a work line. Personal life stays personal.",
+  },
+  {
+    label: "Side-business owners",
+    desc: "Keep the hustle clean. Separate the side project from the day job.",
+  },
+  {
+    label: "Remote workers",
+    desc: "Share a work number on company materials without exposing personal details.",
+  },
+  {
+    label: "Anyone who lists publicly",
+    desc: "Marketplace sellers, contractors, tutors — anyone whose number ends up online.",
+  },
 ]
 
 export default function SecondNumberPage() {
   return (
     <PageLayout>
+      {/* ── Hero — two-column with image slot ──────────────────── */}
       <PageHero
+        eyebrow="Second Phone Number"
         h1="Two numbers. One phone."
-        sub="A second number for work — on your existing device. No SIM swap. No second phone to carry."
-        trustItems={["No second SIM", "Same device", "Work-life separation"]}
+        sub="A second line for work on the device you already carry. No SIM swap. No second phone. No blurred lines."
+        trustItems={["No second SIM", "Same device", "Work-life separation", "Two-way SMS"]}
         primaryCta={{ label: "Start 14-day free trial", href: "/pricing" }}
+        secondaryCta={{ label: "See pricing", href: "/pricing" }}
+        image={{
+          // Replace src with your own image to populate the hero visual
+          // src: "/images/second-number-hero.jpg",
+          alt: "Second phone number on a single device",
+        }}
       />
 
-      <section className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        <div className="max-w-[680px] font-mono text-[15px] text-gray-600 leading-relaxed space-y-4">
-          <p>She needed a number for the property listing. Not her personal mobile.</p>
-          <p>One public listing later, the calls came at 7 AM and 10 PM.</p>
-          <p>The listing was taken down months ago. The calls never stopped — because it was still cached on three third-party sites she didn&apos;t know existed.</p>
-          <p>A second phone number isn&apos;t paranoia. It&apos;s practical infrastructure for anyone whose number ends up in public view.</p>
+      {/* ── Narrative opener ───────────────────────────────────── */}
+      <NarrativeSection
+        paragraphs={[
+          "She needed a number for the property listing. Not her personal mobile.",
+          "One public listing later, the calls came at 7 AM and 10 PM.",
+          "The listing was taken down months ago. The calls never stopped — because it was still cached on three third-party sites she didn&apos;t know existed.",
+          "A second phone number isn&apos;t paranoia. It&apos;s practical infrastructure for anyone whose number ends up in public view.",
+        ]}
+      />
+
+      {/* ── Stats ──────────────────────────────────────────────── */}
+      <StatBar stats={STATS} />
+
+      {/* ── Feature grid ───────────────────────────────────────── */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <SectionHeading
+          eyebrow="How it works"
+          h2="Two lines on one device — cleanly separated"
+          sub="Cloud-routed, not SIM-based. Both lines live on the same phone with no hardware changes."
+        />
+        <ValueGrid items={FEATURES} cols={4} />
+      </section>
+
+      {/* ── Feature split: how it works ────────────────────────── */}
+      <section className="bg-gray-50 border-y border-gray-100 py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <FeatureSplit
+            eyebrow="The setup"
+            heading="Your second number on your existing phone"
+            body="Calls come in showing which line was dialed. Outbound shows your work number — not your personal one. No hardware, no SIM card, no carrier visit."
+            points={[
+              "Incoming calls show which line was dialed",
+              "Outbound caller ID shows the work number",
+              "Can people tell it&apos;s a second number? No.",
+              "Works on iOS, Android, and softphones",
+            ]}
+            cta={{ label: "Start free trial", href: "/pricing" }}
+            image={{
+              // src: "/images/second-number-how-it-works.jpg",
+              alt: "Second number call routing diagram",
+            }}
+          />
         </div>
       </section>
 
-      <section className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-16 border-t border-gray-100">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      {/* ── Who uses second numbers ─────────────────────────────── */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           <div>
-            <SectionHeading eyebrow="How it works" h2="Your second number on your existing phone" />
-            <p className="font-mono text-[14px] text-gray-600 leading-relaxed mb-6">
-              Calls come in showing which line was dialed. Outbound shows your work number — not your personal one. Work stays work. Personal stays personal.
-            </p>
-            <SectionHeading eyebrow="What you can do" h2="Features" />
-            <ul className="space-y-3">
-              {FEATURES.map((f) => (
-                <li key={f} className="flex items-start gap-3 font-mono text-[14px] text-gray-700">
-                  <Check className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                  {f}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <SectionHeading eyebrow="Who needs one most" h2="Who uses second numbers" />
+            <SectionHeading eyebrow="Who needs one most" h2="Five types of people who need this most" />
             <div className="space-y-3">
-              {[
-                { label: "Real estate agents", desc: "Listing contacts that don't follow you for years" },
-                { label: "Freelancers", desc: "Clients reach a work line, not your cell" },
-                { label: "Side-business owners", desc: "Separate the hustle from the day job" },
-                { label: "Remote workers", desc: "Share a work number on company materials without exposing personal" },
-              ].map(({ label, desc }) => (
-                <div key={label} className="p-5 rounded-xl border border-gray-100 bg-white">
-                  <p className="font-mono font-bold text-[13px] text-gray-900 mb-1">{label}</p>
-                  <p className="font-mono text-[12px] text-gray-500">{desc}</p>
+              {WHO_USES.map(({ label, desc }) => (
+                <div
+                  key={label}
+                  className="flex items-start gap-4 p-4 rounded-xl border border-gray-100 bg-white hover:border-accent/30 transition-colors"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent mt-2 flex-shrink-0" />
+                  <div>
+                    <p className="font-semibold text-[14px] text-gray-900 mb-0.5">{label}</p>
+                    <p className="text-[13px] text-gray-500">{desc}</p>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
+
+          {/* Image slot — swap in a product screenshot or use-case photo */}
+          <ImageSlot
+            alt="Second number use case — real estate agent or freelancer"
+            aspect="aspect-[4/3]"
+            // src="/images/second-number-who-uses.jpg"
+          />
         </div>
       </section>
 
       <Faq />
       <NextStepBand
+        heading="One phone. Two lives. Clean separation."
+        sub="No SIM swap. No second device. Activate in minutes."
         primary={{ label: "Start 14-day free trial", href: "/pricing" }}
         secondary={{ label: "See all number types", href: "/phone-numbers" }}
       />
