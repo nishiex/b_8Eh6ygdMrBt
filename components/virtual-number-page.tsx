@@ -1199,7 +1199,18 @@ function ScrollStorySection() {
               </AnimatePresence>
             </div>
 
-          
+            {/* Bottom — slide dots */}
+            <div className="flex flex-col gap-1.5 items-center">
+              {SLIDES.map((_, i) => (
+                <div
+                  key={i}
+                  className={`rounded-full transition-all duration-300 ${i === idx ? "h-5 w-1.5 bg-blue-600" : "h-1.5 w-1.5 bg-gray-200"}`}
+                />
+              ))}
+            </div>
+
+          </div>{/* end CENTER */}
+
           {/* RIGHT — Solution (dominant, slightly larger) */}
           <div className="flex-1 relative overflow-hidden bg-gray-50">
             <AnimatePresence mode="wait">
