@@ -1,19 +1,23 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import {
+  motion, AnimatePresence,
+  useMotionValue, useSpring, useTransform,
+} from "framer-motion"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import type { LucideIcon } from "lucide-react"
 import {
   Globe, Smartphone, Zap, Shield, PhoneCall,
   ArrowRight, Check, ChevronRight,
+  ShieldCheck, HeartPulse, Activity,
+  PhoneIncoming, MessageSquare, Bot, Hash,
 } from "lucide-react"
 import { Faq } from "@/components/faq"
 import { AnnouncementBar } from "@/components/announcement-bar"
 import { MegaNav } from "@/components/mega-nav"
 import { Footer } from "@/components/footer"
-import { VirtualDashboard } from "@/components/virtual-dashboard"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -149,7 +153,6 @@ export function VirtualNumberPage() {
         .from(".vn-sub",       { y: 16, opacity: 0, duration: 0.45 }, "-=0.5")
         .from(".vn-cta",       { y: 12, opacity: 0, duration: 0.4  }, "-=0.35")
         .from(".vn-stat",      { y: 10, opacity: 0, stagger: 0.07, duration: 0.4, ease: "back.out(1.5)" }, "-=0.2")
-        .from(".vn-dashboard", { y: 32, opacity: 0, duration: 0.7, ease: "power2.out" }, "-=0.1")
 
       gsap.from(".vn-step", {
         x: -30, opacity: 0, stagger: 0.12, duration: 0.6, ease: "power3.out",
@@ -189,73 +192,316 @@ export function VirtualNumberPage() {
 function HeroSection() {
   return (
     <section
-      className="relative overflow-hidden pt-20 pb-16 px-[5%] bg-white"
+      className="relative overflow-hidden pt-16 pb-12 md:pt-20 md:pb-16 px-[5%] bg-white"
       aria-labelledby="hero-h1"
     >
-      {/* Subtle dot-grid background */}
+      {/* Dot-grid background */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0"
         style={{
           backgroundImage: "radial-gradient(circle, #e2e8f0 1px, transparent 1px)",
           backgroundSize: "28px 28px",
-          opacity: 0.6,
+          opacity: 0.55,
         }} />
-      {/* Blue tint top center */}
-      <div aria-hidden="true" className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[360px] rounded-full"
-        style={{ background: "radial-gradient(ellipse, rgba(38,100,235,0.06) 0%, transparent 70%)" }} />
+      {/* Ambient blue orb */}
+      <div aria-hidden="true" className="pointer-events-none absolute top-0 left-0 w-[640px] h-[480px]"
+        style={{ background: "radial-gradient(ellipse at top left, rgba(37,99,235,0.09) 0%, transparent 65%)" }} />
+      <div aria-hidden="true" className="pointer-events-none absolute bottom-0 right-0 w-[480px] h-[360px]"
+        style={{ background: "radial-gradient(ellipse at bottom right, rgba(99,102,241,0.07) 0%, transparent 65%)" }} />
 
       <div className="max-w-[1200px] mx-auto relative">
-        {/* Eyebrow + heading + sub */}
-        <div className="text-center mb-10">
-          <div className="vn-eyebrow inline-flex items-center gap-2 border text-[11px] font-bold font-mono tracking-[1.5px] uppercase px-4 py-2 rounded-full mb-8"
-            style={{ background: "#eff6ff", borderColor: "#bfdbfe", color: "#2664eb" }}>
-            <span aria-hidden="true" className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-70 animate-ping" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-blue-600" />
-            </span>
-            Virtual Phone Numbers
-          </div>
+        {/* ── 1fr 1fr grid ── */}
+        <div
+          className="grid gap-12 lg:gap-16 items-center"
+          style={{ gridTemplateColumns: "1fr 1fr" }}
+        >
+          {/* LEFT — copy */}
+          <div>
+            <div className="vn-eyebrow inline-flex items-center gap-2 border text-[11px] font-bold font-mono tracking-[1.5px] uppercase px-4 py-2 rounded-full mb-7"
+              style={{ background: "#eff6ff", borderColor: "#bfdbfe", color: "#2563eb" }}>
+              <span aria-hidden="true" className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-70 animate-ping" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-blue-600" />
+              </span>
+              Virtual Phone Numbers
+            </div>
 
-          <h1 id="hero-h1" className="vn-h1 font-serif text-[48px] sm:text-[58px] lg:text-[70px] font-semibold leading-[1.02] tracking-tight max-w-[820px] mx-auto mb-6 overflow-hidden text-slate-900">
-            {"A phone number in".split(" ").map((word, i) => (
-              <span key={`l1-${i}`} className="inline-block mr-[0.18em]">{word}</span>
-            ))}
-            <span className="italic block" style={{ color: "#2664eb" }}>
-              {"any area code.".split(" ").map((word, i) => (
-                <span key={`l2-${i}`} className="inline-block mr-[0.18em]">{word}</span>
-              ))}
-            </span>
-          </h1>
-
-          <p className="vn-sub text-[17px] text-slate-500 max-w-[520px] mx-auto mb-9 leading-relaxed">
-            Virtual numbers give your business nationwide reach — routed to any device — without the office rent.
-          </p>
-
-          <div className="vn-cta flex flex-wrap items-center justify-center gap-3 mb-10">
-            <PrimaryButton href="/pricing">Start 14-day free trial</PrimaryButton>
-            <motion.a href="/pricing"
-              whileHover={{ y: -1 }} whileTap={{ scale: 0.97 }}
-              className="inline-flex items-center gap-1.5 text-[15px] font-semibold text-slate-500 hover:text-accent transition-colors"
+            <h1
+              id="hero-h1"
+              className="vn-h1 font-serif font-semibold leading-[1.02] tracking-tight text-slate-900 mb-5 overflow-hidden"
+              style={{ fontSize: "clamp(2.4rem, 4vw, 3.8rem)" }}
             >
-              See pricing <ChevronRight aria-hidden="true" className="h-4 w-4" strokeWidth={2} />
-            </motion.a>
+              <span className="block">
+                {"A phone number in".split(" ").map((w, i) => (
+                  <span key={`l1-${i}`} className="inline-block mr-[0.18em]">{w}</span>
+                ))}
+              </span>
+              <span className="block italic" style={{ color: "#2563eb" }}>
+                {"any area code.".split(" ").map((w, i) => (
+                  <span key={`l2-${i}`} className="inline-block mr-[0.18em]">{w}</span>
+                ))}
+              </span>
+            </h1>
+
+            <p className="vn-sub text-[17px] text-slate-500 leading-relaxed mb-8 max-w-[480px]">
+              Virtual numbers give your business nationwide reach — routed to any device — without the office rent.
+            </p>
+
+            <div className="vn-cta flex flex-wrap items-center gap-3 mb-8">
+              <PrimaryButton href="/pricing">Start 14-day free trial</PrimaryButton>
+              <motion.a
+                href="/pricing"
+                whileHover={{ y: -1 }} whileTap={{ scale: 0.97 }}
+                className="inline-flex items-center gap-1.5 text-[15px] font-semibold text-slate-500 hover:text-accent transition-colors"
+              >
+                See pricing <ChevronRight aria-hidden="true" className="h-4 w-4" strokeWidth={2} />
+              </motion.a>
+            </div>
+
+            {/* Trust chips */}
+            <div className="flex flex-wrap gap-2 mb-8">
+              {([
+                { label: "14-day free trial", Icon: Check },
+                { label: "STIR/SHAKEN",       Icon: ShieldCheck },
+                { label: "HIPAA-ready",        Icon: HeartPulse },
+                { label: "99.99% uptime",      Icon: Activity },
+              ] as { label: string; Icon: LucideIcon }[]).map(({ label, Icon }) => (
+                <span
+                  key={label}
+                  className="hero-chip inline-flex items-center gap-1.5 bg-white/80 backdrop-blur-sm border border-gray-200 text-gray-700 text-[11px] font-semibold font-mono px-3.5 py-[6px] rounded-full shadow-sm"
+                >
+                  <Icon className="h-3 w-3 text-accent" strokeWidth={2.2} />
+                  {label}
+                </span>
+              ))}
+            </div>
+
+            {/* Stats */}
+            <dl className="flex flex-wrap gap-7">
+              {STATS.map(({ value, label }) => (
+                <div key={label} className="vn-stat">
+                  <dt className="font-serif text-[26px] font-bold leading-none text-slate-900">{value}</dt>
+                  <dd className="text-[10px] font-mono mt-0.5 uppercase tracking-wider text-slate-400">{label}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
 
-          <dl className="flex flex-wrap justify-center gap-8 mb-12">
-            {STATS.map(({ value, label }) => (
-              <div key={label} className="vn-stat text-center">
-                <dt className="font-serif text-[26px] font-bold leading-none text-slate-900">{value}</dt>
-                <dd className="text-[10px] font-mono mt-1 uppercase tracking-wider text-slate-400">{label}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-
-        {/* Dashboard visual */}
-        <div className="vn-dashboard">
-          <VirtualDashboard />
+          {/* RIGHT — live showcase */}
+          <div className="vn-dashboard">
+            <LiveShowcase />
+          </div>
         </div>
       </div>
     </section>
+  )
+}
+
+/* ─── Live Showcase (right column of hero) ──────────────────── */
+
+type ActivityItem = {
+  id: number
+  kind: "call" | "sms" | "ai" | "number"
+  Icon: LucideIcon
+  title: string
+  detail: string
+  chip: string
+  tint: "blue" | "green" | "violet" | "amber"
+}
+
+const ACTIVITY_FEED: ActivityItem[] = [
+  { id: 1, kind: "call",   Icon: PhoneIncoming, title: "Inbound · +1 415 555 0138",       detail: "Routed to Sales · Atlanta · answered in 0.9s",      chip: "LIVE",    tint: "green"  },
+  { id: 2, kind: "sms",    Icon: MessageSquare, title: "SMS delivered · +1 212 555 0194", detail: "OTP code · Verizon · 340ms",                        chip: "SENT",    tint: "blue"   },
+  { id: 3, kind: "ai",     Icon: Bot,           title: "AI receptionist · +44 20 7946",   detail: "After-hours · booked demo for Thursday 10am",       chip: "HANDLED", tint: "violet" },
+  { id: 4, kind: "number", Icon: Hash,          title: "Local number ported · +1 303 555",detail: "Denver · CenturyLink · STIR/SHAKEN registered",     chip: "READY",   tint: "amber"  },
+  { id: 5, kind: "call",   Icon: PhoneIncoming, title: "Inbound · +1 646 555 0102",       detail: "Routed to Support · Brooklyn · answered in 1.2s",   chip: "LIVE",    tint: "green"  },
+  { id: 6, kind: "sms",    Icon: MessageSquare, title: "Campaign blast · 12,480 recipients", detail: "Marketing · 10DLC · 98.4% delivery",              chip: "SENT",    tint: "blue"   },
+]
+
+const TINT_MAP: Record<ActivityItem["tint"], { bg: string; ring: string; text: string; dot: string }> = {
+  blue:   { bg: "bg-blue-50",    ring: "ring-blue-100",    text: "text-accent",       dot: "bg-accent"        },
+  green:  { bg: "bg-emerald-50", ring: "ring-emerald-100", text: "text-emerald-600",  dot: "bg-emerald-500"   },
+  violet: { bg: "bg-violet-50",  ring: "ring-violet-100",  text: "text-violet-600",   dot: "bg-violet-500"    },
+  amber:  { bg: "bg-amber-50",   ring: "ring-amber-100",   text: "text-amber-600",    dot: "bg-amber-500"     },
+}
+
+function LiveShowcase() {
+  const cardRef = useRef<HTMLDivElement>(null)
+
+  const mx = useMotionValue(0)
+  const my = useMotionValue(0)
+  const rotX = useSpring(useTransform(my, [-0.5, 0.5], [5, -5]), { stiffness: 120, damping: 18 })
+  const rotY = useSpring(useTransform(mx, [-0.5, 0.5], [-5, 5]), { stiffness: 120, damping: 18 })
+
+  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    const rect = e.currentTarget.getBoundingClientRect()
+    mx.set((e.clientX - rect.left) / rect.width - 0.5)
+    my.set((e.clientY - rect.top) / rect.height - 0.5)
+  }
+  function handleMouseLeave() { mx.set(0); my.set(0) }
+
+  const [cursor, setCursor] = useState(0)
+  useEffect(() => {
+    const id = setInterval(() => setCursor((c) => (c + 1) % ACTIVITY_FEED.length), 2400)
+    return () => clearInterval(id)
+  }, [])
+
+  const visible = [
+    ACTIVITY_FEED[cursor % ACTIVITY_FEED.length],
+    ACTIVITY_FEED[(cursor + 1) % ACTIVITY_FEED.length],
+    ACTIVITY_FEED[(cursor + 2) % ACTIVITY_FEED.length],
+  ]
+
+  return (
+    <motion.div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.45 }}
+      style={{ perspective: 1200, rotateX: rotX, rotateY: rotY, transformStyle: "preserve-3d" }}
+      className="relative w-full"
+    >
+      {/* Floor shadow */}
+      <div aria-hidden="true"
+        className="pointer-events-none absolute -bottom-8 left-1/2 h-16 w-[85%] -translate-x-1/2 rounded-full"
+        style={{ background: "radial-gradient(ellipse at center, rgba(37,99,235,0.22), rgba(37,99,235,0) 70%)", filter: "blur(18px)" }}
+      />
+
+      {/* Orbit ring decoration */}
+      <ShowcaseOrbitRing />
+
+      {/* Main card */}
+      <div
+        className="relative overflow-hidden rounded-[28px] bg-white/80 backdrop-blur-xl ring-1 ring-gray-200/70 shadow-[0_40px_80px_-30px_rgba(15,23,42,0.22),0_8px_24px_-12px_rgba(37,99,235,0.18)]"
+        style={{ transform: "translateZ(0)" }}
+      >
+        {/* Inner gradient mesh */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-60"
+          style={{ background: "radial-gradient(600px 200px at 15% 0%, rgba(37,99,235,0.12), transparent 60%), radial-gradient(500px 180px at 95% 100%, rgba(99,102,241,0.10), transparent 60%)" }}
+        />
+
+        {/* Window chrome */}
+        <div className="relative flex items-center justify-between px-5 py-3.5 border-b border-gray-100">
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-red-300/80" />
+              <span className="w-2.5 h-2.5 rounded-full bg-yellow-300/80" />
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-300/80" />
+            </div>
+            <span className="ml-2 text-[11px] font-mono text-gray-400 tracking-wider">app.twiching.ai / live</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <ShowcasePulseDot />
+            <span className="text-[11px] font-mono font-bold tracking-[1.5px] uppercase text-emerald-600">Live activity</span>
+          </div>
+        </div>
+
+        {/* Rolling feed */}
+        <div className="relative px-4 py-4 min-h-[240px]">
+          <div className="space-y-2.5">
+            <AnimatePresence mode="popLayout" initial={false}>
+              {visible.map((item, i) => (
+                <motion.div
+                  key={`${item.id}-${cursor}-${i}`}
+                  layout
+                  initial={{ opacity: 0, y: 20, scale: 0.96 }}
+                  animate={{ opacity: 1 - i * 0.12, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -14, scale: 0.96 }}
+                  transition={{ type: "spring", stiffness: 260, damping: 26, mass: 0.8 }}
+                >
+                  <ShowcaseActivityRow item={item} />
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+        </div>
+
+        {/* Footer stats */}
+        <div className="relative grid grid-cols-3 divide-x divide-gray-100 border-t border-gray-100 bg-gray-50/50">
+          <ShowcaseFooterStat label="Today"       value="14,823" sub="calls routed"  />
+          <ShowcaseFooterStat label="Answer rate" value="91.4%"  sub="last 24h"      />
+          <ShowcaseFooterStat label="Latency p95" value="14ms"   sub="global"        />
+        </div>
+      </div>
+    </motion.div>
+  )
+}
+
+function ShowcaseActivityRow({ item }: { item: ActivityItem }) {
+  const t = TINT_MAP[item.tint]
+  const { Icon } = item
+  return (
+    <div className="flex items-center gap-3 rounded-2xl bg-white/80 backdrop-blur ring-1 ring-gray-100 px-4 py-2.5 hover:ring-gray-200 transition">
+      <span className={`grid place-items-center h-9 w-9 rounded-xl flex-shrink-0 ${t.bg} ring-1 ${t.ring} ${t.text}`}>
+        <Icon className="h-4 w-4" strokeWidth={2} />
+      </span>
+      <div className="flex-1 min-w-0 text-left">
+        <p className="text-[12px] font-semibold text-gray-900 font-mono truncate">{item.title}</p>
+        <p className="text-[11px] text-gray-500 truncate">{item.detail}</p>
+      </div>
+      <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-mono font-bold tracking-[1.5px] uppercase ${t.bg} ${t.text} ring-1 ${t.ring}`}>
+        <motion.span
+          className={`inline-block h-1.5 w-1.5 rounded-full ${t.dot}`}
+          animate={{ opacity: [1, 0.3, 1] }}
+          transition={{ duration: 1.4, repeat: Infinity }}
+        />
+        {item.chip}
+      </span>
+    </div>
+  )
+}
+
+function ShowcasePulseDot() {
+  return (
+    <span className="relative flex h-2 w-2">
+      <motion.span
+        className="absolute inline-flex h-full w-full rounded-full bg-emerald-400"
+        animate={{ scale: [1, 2.2], opacity: [0.6, 0] }}
+        transition={{ duration: 1.6, repeat: Infinity, ease: "easeOut" }}
+      />
+      <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+    </span>
+  )
+}
+
+function ShowcaseOrbitRing() {
+  return (
+    <motion.div
+      aria-hidden="true"
+      className="pointer-events-none absolute -top-9 -right-9 h-36 w-36"
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.8, delay: 0.9 }}
+    >
+      <motion.div
+        className="absolute inset-0"
+        animate={{ rotate: 360 }}
+        transition={{ duration: 24, repeat: Infinity, ease: "linear" }}
+      >
+        <div className="absolute inset-0 rounded-full border border-dashed border-blue-200/80" />
+        <span className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 h-2.5 w-2.5 rounded-full bg-accent shadow-[0_0_0_4px_rgba(37,99,235,0.18)]" />
+        <span className="absolute bottom-[12%] right-[6%] h-2 w-2 rounded-full bg-violet-500" />
+        <span className="absolute left-[10%] bottom-[20%] h-1.5 w-1.5 rounded-full bg-emerald-500" />
+      </motion.div>
+      <motion.div
+        className="absolute inset-5 rounded-full border border-blue-100"
+        animate={{ rotate: -360 }}
+        transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+      >
+        <span className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/2 h-2 w-2 rounded-full bg-accent/70" />
+      </motion.div>
+    </motion.div>
+  )
+}
+
+function ShowcaseFooterStat({ label, value, sub }: { label: string; value: string; sub: string }) {
+  return (
+    <div className="px-4 py-3.5 text-left">
+      <p className="text-[9px] font-mono font-bold tracking-[1.5px] uppercase text-gray-400">{label}</p>
+      <p className="font-serif text-[22px] font-semibold text-gray-900 mt-0.5 leading-none">{value}</p>
+      <p className="text-[10px] text-gray-500 font-mono mt-0.5">{sub}</p>
+    </div>
   )
 }
 
