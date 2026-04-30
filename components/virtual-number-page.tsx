@@ -74,15 +74,64 @@ const RELATED: RelatedCard[] = [
 ]
 
 /* ─── Scroll story ───────────────────────────────────────────── */
-interface Slide { tag: string; tagline: string }
+interface Slide {
+  tag: string
+  tagline: string
+  problem: string
+  outcome: string
+  stat: string
+  statLabel: string
+}
 
 const SLIDES: Slide[] = [
-  { tag: "Startups",     tagline: "Build national reach before you hire nationally" },
-  { tag: "Remote teams", tagline: "Show a local face in every market you serve" },
-  { tag: "Sales teams",  tagline: "Triple answer rates with a local area code" },
-  { tag: "Consultants",  tagline: "Keep your personal cell out of your business" },
-  { tag: "Agencies",     tagline: "One number per client city. One dashboard for all" },
-  { tag: "E-commerce",   tagline: "Local numbers where your customers shop" },
+  {
+    tag:       "Startups",
+    tagline:   "Build national reach before you hire nationally",
+    problem:   "Unknown callers — prospects decline",
+    outcome:   "Local number = instant trust, 4x more pickups",
+    stat:      "4x",
+    statLabel: "more answered calls",
+  },
+  {
+    tag:       "Remote teams",
+    tagline:   "Show a local face in every market you serve",
+    problem:   "Reps expose personal cells to clients forever",
+    outcome:   "Private routing hides personal numbers always",
+    stat:      "100%",
+    statLabel: "privacy for your team",
+  },
+  {
+    tag:       "Sales teams",
+    tagline:   "Triple answer rates with a local area code",
+    problem:   "14% answer rate — out-of-state area codes ignored",
+    outcome:   "Local 720 area code lifts answers to 68%",
+    stat:      "68%",
+    statLabel: "answer rate with local",
+  },
+  {
+    tag:       "Consultants",
+    tagline:   "Keep your personal cell out of your business",
+    problem:   "All clients have your personal number permanently",
+    outcome:   "Work line routes silently — personal stays hidden",
+    stat:      "0",
+    statLabel: "clients see your cell",
+  },
+  {
+    tag:       "Agencies",
+    tagline:   "One number per client city. One dashboard for all",
+    problem:   "All markets funnel into one generic number",
+    outcome:   "Per-city local presence across every market",
+    stat:      "5x",
+    statLabel: "markets, one dashboard",
+  },
+  {
+    tag:       "E-commerce",
+    tagline:   "Local numbers where your customers shop",
+    problem:   "Generic 1-800 reads 'call center' — trust drops",
+    outcome:   "Local support numbers lift callback rate by 3x",
+    stat:      "3x",
+    statLabel: "higher callback rate",
+  },
 ]
 
 /* ─── Animation constants ────────────────────────────────────── */
@@ -1014,15 +1063,16 @@ function CtaSection() {
 /* ─── Scroll Story ──────────────────────────────────────────── */
 function ScrollStorySection() {
   const outerRef = useRef<HTMLDivElement>(null)
-  const [idx, setIdx] = useState(0)
-  const prevIdx = useRef(0)
+  const [idx, setIdx]     = useState(0)
+  const prevIdx           = useRef(0)
+  const slide             = SLIDES[idx]
 
   useEffect(() => {
     const trigger = ScrollTrigger.create({
       trigger: outerRef.current,
       start: "top top",
       end: "bottom bottom",
-      scrub: 0,
+      scrub: 0.6,
       onUpdate: (self) => {
         const next = Math.min(Math.floor(self.progress * SLIDES.length), SLIDES.length - 1)
         if (next !== prevIdx.current) { prevIdx.current = next; setIdx(next) }
@@ -1031,78 +1081,144 @@ function ScrollStorySection() {
     return () => trigger.kill()
   }, [])
 
+  const progress = ((idx + 1) / SLIDES.length) * 100
+
   return (
     <div ref={outerRef} style={{ height: `${SLIDES.length * 100}vh` }}>
       <div className="sticky top-0 h-screen flex flex-col overflow-hidden bg-white">
 
-        {/* header */}
-        <div className="flex justify-between items-center px-[5%] py-4 border-b border-gray-100 flex-shrink-0">
-          <p className="font-serif text-[15px] text-gray-400 italic hidden sm:block">Before virtual numbers</p>
-          <div className="text-center mx-auto sm:mx-0">
-            <p className="text-[10px] font-mono font-bold tracking-[2px] uppercase text-blue-600 mb-0.5">Who it's for</p>
+        {/* ── Header bar ── */}
+        <div className="flex items-center justify-between px-[5%] py-3 border-b border-gray-100 flex-shrink-0 gap-4">
+          {/* Left label */}
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <span className="inline-flex items-center gap-1.5 bg-red-50 border border-red-100 text-red-500 text-[9px] font-mono font-bold tracking-[1.5px] uppercase px-2.5 py-1 rounded-full">
+              <span className="w-1.5 h-1.5 rounded-full bg-red-400 inline-block" />
+              Problem
+            </span>
+          </div>
+
+          {/* Center — audience + progress */}
+          <div className="flex-1 flex flex-col items-center gap-1.5 min-w-0">
             <AnimatePresence mode="wait">
-              <motion.p key={idx}
+              <motion.p
+                key={`tag${idx}`}
                 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.25 }}
-                className="font-serif text-[22px] font-semibold text-gray-900 leading-none"
-              >{SLIDES[idx].tag}</motion.p>
+                className="font-serif text-[18px] sm:text-[22px] font-semibold text-gray-900 leading-none"
+              >
+                {slide.tag}
+              </motion.p>
             </AnimatePresence>
+            {/* Progress bar */}
+            <div className="w-32 h-1 bg-gray-100 rounded-full overflow-hidden">
+              <motion.div
+                className="h-full bg-blue-600 rounded-full origin-left"
+                animate={{ width: `${progress}%` }}
+                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              />
+            </div>
+            <p className="text-[9px] font-mono text-gray-400">{idx + 1} / {SLIDES.length}</p>
           </div>
-          <p className="font-serif text-[15px] text-gray-400 italic hidden sm:block">With Twiching</p>
+
+          {/* Right label */}
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <span className="inline-flex items-center gap-1.5 bg-blue-50 border border-blue-100 text-blue-600 text-[9px] font-mono font-bold tracking-[1.5px] uppercase px-2.5 py-1 rounded-full">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-500 inline-block" />
+              Solution
+            </span>
+          </div>
         </div>
 
-        {/* 3-column main */}
+        {/* ── 3-column main ── */}
         <div className="flex flex-1 min-h-0">
 
-          {/* LEFT — before, full-bleed */}
-          <div className="flex-1 relative overflow-hidden bg-gray-950">
+          {/* LEFT — Problem (dimmed, slightly smaller) */}
+          <div className="w-[30%] sm:w-[33%] relative overflow-hidden bg-gray-950 flex-shrink-0">
             <AnimatePresence mode="wait">
-              <motion.div key={`b${idx}`}
-                initial={{ opacity: 0, filter: "blur(6px)" }}
-                animate={{ opacity: 1, filter: "blur(0px)" }}
-                exit={{   opacity: 0, filter: "blur(6px)" }}
-                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              <motion.div
+                key={`b${idx}`}
+                initial={{ opacity: 0, x: -20, scale: 0.97 }}
+                animate={{ opacity: 1,  x: 0,   scale: 1    }}
+                exit={{   opacity: 0,   x: -20,  scale: 0.97 }}
+                transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
                 className="absolute inset-0"
+                style={{ filter: "blur(0.5px)" }}
               >
+                {/* Dimming veil */}
+                <div className="absolute inset-0 bg-black/25 z-10 pointer-events-none" />
                 <BeforeMockup i={idx} />
               </motion.div>
             </AnimatePresence>
           </div>
 
-          {/* CENTER */}
-          <div className="w-[160px] sm:w-[200px] flex-shrink-0 flex flex-col items-center justify-center bg-white border-x border-gray-100 px-5 text-center gap-5">
-            <div>
-              {/* <p className="text-[9px] font-mono font-bold tracking-[2px] uppercase text-blue-600 mb-3">Who it's for</p> */}
+          {/* CENTER — Narrative spine */}
+          <div className="w-[240px] sm:w-[280px] flex-shrink-0 flex flex-col items-center justify-between bg-white border-x border-gray-100 px-6 py-6">
+
+            {/* Top — stat callout */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`stat${idx}`}
+                initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.85 }}
+                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                className="text-center"
+              >
+                <p className="font-serif text-[52px] font-bold leading-none text-blue-600">{slide.stat}</p>
+                <p className="text-[10px] font-mono text-gray-500 mt-1 leading-tight">{slide.statLabel}</p>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Middle — problem + outcome */}
+            <div className="flex flex-col gap-4 w-full">
               <AnimatePresence mode="wait">
-                <motion.p key={`tag${idx}`}
+                <motion.div
+                  key={`spine${idx}`}
                   initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }}
                   transition={{ duration: 0.3 }}
-                  className="font-serif text-[26px] sm:text-[32px] font-semibold text-gray-900 leading-tight"
-                >{SLIDES[idx].tag}</motion.p>
+                  className="space-y-3"
+                >
+                  {/* Audience */}
+                  <p className="text-[10px] font-mono font-bold tracking-[1.5px] uppercase text-blue-600 text-center">{slide.tag}</p>
+
+                  {/* Problem */}
+                  <div className="rounded-xl bg-red-50 border border-red-100 px-3.5 py-3">
+                    <p className="text-[9px] font-mono font-bold tracking-[1.2px] uppercase text-red-400 mb-1">Problem</p>
+                    <p className="text-[12px] text-gray-700 leading-snug">{slide.problem}</p>
+                  </div>
+
+                  {/* Arrow */}
+                  <div className="flex justify-center">
+                    <ArrowRight className="h-4 w-4 text-blue-400" strokeWidth={2.5} />
+                  </div>
+
+                  {/* Outcome */}
+                  <div className="rounded-xl bg-blue-50 border border-blue-100 px-3.5 py-3">
+                    <p className="text-[9px] font-mono font-bold tracking-[1.2px] uppercase text-blue-500 mb-1">Solution</p>
+                    <p className="text-[12px] text-gray-700 leading-snug">{slide.outcome}</p>
+                  </div>
+                </motion.div>
               </AnimatePresence>
             </div>
-            {/* <AnimatePresence mode="wait">
-              <motion.p key={`tl${idx}`}
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                transition={{ duration: 0.4, delay: 0.1 }}
-                className="font-serif text-[12px] text-gray-400 leading-relaxed italic"
-              >{SLIDES[idx].tagline}</motion.p>
-            </AnimatePresence> */}
-            {/* <div className="flex flex-col gap-1.5">
+
+            {/* Bottom — slide dots */}
+            <div className="flex flex-col gap-1.5 items-center">
               {SLIDES.map((_, i) => (
-                <div key={i} className={`rounded-full transition-all duration-300 ${i === idx ? "h-5 w-1.5 bg-blue-600" : "h-1.5 w-1.5 bg-gray-200"}`} />
+                <div
+                  key={i}
+                  className={`rounded-full transition-all duration-300 ${i === idx ? "h-5 w-1.5 bg-blue-600" : "h-1.5 w-1.5 bg-gray-200"}`}
+                />
               ))}
-            </div> */}
+            </div>
           </div>
 
-          {/* RIGHT — after, full-bleed */}
+          {/* RIGHT — Solution (dominant, slightly larger) */}
           <div className="flex-1 relative overflow-hidden bg-gray-50">
             <AnimatePresence mode="wait">
-              <motion.div key={`a${idx}`}
-                initial={{ opacity: 0, filter: "blur(6px)" }}
-                animate={{ opacity: 1, filter: "blur(0px)" }}
-                exit={{   opacity: 0, filter: "blur(6px)" }}
-                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              <motion.div
+                key={`a${idx}`}
+                initial={{ opacity: 0, x: 20,  scale: 0.97 }}
+                animate={{ opacity: 1,  x: 0,   scale: 1    }}
+                exit={{   opacity: 0,   x: 20,  scale: 0.97 }}
+                transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
                 className="absolute inset-0"
               >
                 <AfterMockup i={idx} />
@@ -1112,15 +1228,31 @@ function ScrollStorySection() {
 
         </div>
 
-        {/* footer */}
-        <div className="px-[5%] py-3 border-t border-gray-100 flex items-center justify-center gap-3 flex-shrink-0">
-          <p className="text-[11px] font-mono text-gray-400">Scroll to see each use case</p>
-          <div className="flex gap-1">
-            {SLIDES.map((_, i) => (
-              <div key={i} className={`h-1 w-6 rounded-full transition-colors duration-300 ${i === idx ? "bg-blue-600" : "bg-gray-200"}`} />
-            ))}
+        {/* ── Sticky bottom CTA ── */}
+        <div className="px-[5%] py-3 border-t border-gray-100 flex-shrink-0 flex items-center justify-between gap-4">
+          <p className="text-[11px] font-mono text-gray-400 hidden sm:block">
+            Scroll to see each use case
+          </p>
+          <div className="flex items-center gap-3 mx-auto sm:mx-0">
+            <motion.a
+              href="/pricing"
+              whileHover={{ y: -1 }} whileTap={{ scale: 0.97 }}
+              className="inline-flex items-center gap-2 bg-[#2563eb] text-white text-[12px] font-mono font-bold px-5 py-2.5 rounded-full shadow-[0_6px_20px_-6px_rgba(37,99,235,0.55)] hover:bg-[#1d4ed8] transition"
+            >
+              Get your number
+              <ArrowRight className="h-3.5 w-3.5" strokeWidth={2.5} />
+            </motion.a>
+            <motion.a
+              href="/phone-numbers/virtual#search"
+              whileHover={{ y: -1 }} whileTap={{ scale: 0.97 }}
+              className="inline-flex items-center gap-1.5 text-[12px] font-mono font-semibold text-gray-500 hover:text-gray-900 transition"
+            >
+              <Search className="h-3 w-3" strokeWidth={2.5} />
+              Search available numbers
+            </motion.a>
           </div>
         </div>
+
       </div>
     </div>
   )
