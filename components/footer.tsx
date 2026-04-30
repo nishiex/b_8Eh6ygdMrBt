@@ -14,7 +14,7 @@ const cols = [
   {
     title: "Company",
     links: [
-      { label: "About", href: "#" },
+      { label: "About", href: "/about" },
       { label: "Trust & SLA", href: "#" },
       { label: "Singapore infrastructure", href: "#" },
       { label: "Careers", href: "#" },
@@ -24,7 +24,7 @@ const cols = [
   {
     title: "Get in touch",
     links: [
-      { label: "Request a Demo", href: "https://www.twiching.ai/contact", highlight: true },
+      { label: "Request a Demo", href: "/contact", highlight: true },
       { label: "Start Free Trial", href: "https://www.twiching.ai/pricing" },
       { label: "Sales enquiries", href: "#" },
       { label: "Support", href: "#" },
@@ -89,8 +89,13 @@ export function Footer() {
         <div className="pt-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 text-xs text-gray-500 font-mono">
           <div>© 2026 Twiching Pte. Ltd. · Infrastructure anchored in Singapore</div>
           <div className="flex flex-wrap items-center gap-4 sm:gap-6">
-            {["Privacy", "Terms", "SLA", "Security"].map((l) => (
-              <a key={l} href="#" className="hover:text-white transition-colors">{l}</a>
+            {[
+              { label: "Privacy",  href: "/privacy-policy" },
+              { label: "Terms",    href: "/terms-and-conditions" },
+              { label: "SLA",      href: "#" },
+              { label: "Security", href: "#" },
+            ].map((l) => (
+              <a key={l.label} href={l.href} className="hover:text-white transition-colors">{l.label}</a>
             ))}
           </div>
         </div>
