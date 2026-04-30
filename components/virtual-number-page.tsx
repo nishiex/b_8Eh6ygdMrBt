@@ -13,6 +13,7 @@ import { Faq } from "@/components/faq"
 import { AnnouncementBar } from "@/components/announcement-bar"
 import { MegaNav } from "@/components/mega-nav"
 import { Footer } from "@/components/footer"
+import { VirtualDashboard } from "@/components/virtual-dashboard"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -143,11 +144,12 @@ export function VirtualNumberPage() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.timeline({ defaults: { ease: "power3.out" } })
-        .from(".vn-eyebrow", { y: 16, opacity: 0, duration: 0.5 })
-        .from(".vn-h1 span", { y: 60, opacity: 0, stagger: 0.04, duration: 0.8, ease: "power4.out" }, "-=0.2")
-        .from(".vn-sub",     { y: 16, opacity: 0, duration: 0.45 }, "-=0.5")
-        .from(".vn-cta",     { y: 12, opacity: 0, duration: 0.4  }, "-=0.35")
-        .from(".vn-stat",    { y: 10, opacity: 0, stagger: 0.07, duration: 0.4, ease: "back.out(1.5)" }, "-=0.2")
+        .from(".vn-eyebrow",   { y: 16, opacity: 0, duration: 0.5 })
+        .from(".vn-h1 span",   { y: 60, opacity: 0, stagger: 0.04, duration: 0.8, ease: "power4.out" }, "-=0.2")
+        .from(".vn-sub",       { y: 16, opacity: 0, duration: 0.45 }, "-=0.5")
+        .from(".vn-cta",       { y: 12, opacity: 0, duration: 0.4  }, "-=0.35")
+        .from(".vn-stat",      { y: 10, opacity: 0, stagger: 0.07, duration: 0.4, ease: "back.out(1.5)" }, "-=0.2")
+        .from(".vn-dashboard", { y: 32, opacity: 0, duration: 0.7, ease: "power2.out" }, "-=0.1")
 
       gsap.from(".vn-step", {
         x: -30, opacity: 0, stagger: 0.12, duration: 0.6, ease: "power3.out",
@@ -186,56 +188,84 @@ export function VirtualNumberPage() {
 /* ─── Sections ──────────────────────────────────────────────── */
 function HeroSection() {
   return (
-    <section className="relative overflow-hidden pt-20 pb-28 px-[5%] bg-white" aria-labelledby="hero-h1">
+    <section
+      className="relative overflow-hidden pt-20 pb-0 px-[5%]"
+      aria-labelledby="hero-h1"
+      style={{ background: "linear-gradient(180deg, #0b1220 0%, #0d1526 60%, #f8fafc 60%)" }}
+    >
+      {/* Ambient glows */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full"
-          style={{ background: "radial-gradient(ellipse, rgba(37,99,235,0.07) 0%, transparent 70%)" }} />
-        <div className="absolute bottom-0 right-0 w-[500px] h-[400px] rounded-full"
-          style={{ background: "radial-gradient(ellipse, rgba(124,58,237,0.06) 0%, transparent 70%)" }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[480px] rounded-full"
+          style={{ background: "radial-gradient(ellipse, rgba(59,130,246,0.12) 0%, transparent 70%)", filter: "blur(1px)" }} />
+        <div className="absolute top-16 right-0 w-[400px] h-[320px] rounded-full"
+          style={{ background: "radial-gradient(ellipse, rgba(139,92,246,0.08) 0%, transparent 70%)" }} />
+        {/* subtle grid overlay */}
+        <div className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
+            backgroundSize: "48px 48px",
+          }} />
       </div>
 
-      <div className="max-w-[1100px] mx-auto text-center relative">
-        <div className="vn-eyebrow inline-flex items-center gap-2 bg-blue-50 border border-blue-100 text-blue-600 text-[11px] font-bold font-mono tracking-[1.5px] uppercase px-4 py-2 rounded-full mb-8">
-          <span aria-hidden="true" className="relative flex h-1.5 w-1.5">
-            <span className="absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-60 animate-ping" />
-            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-blue-600" />
-          </span>
-          Virtual Phone Numbers
-        </div>
+      <div className="max-w-[1200px] mx-auto relative">
+        {/* Eyebrow + heading + sub — centered, white on dark */}
+        <div className="text-center mb-10">
+          <div className="vn-eyebrow inline-flex items-center gap-2 border text-[11px] font-bold font-mono tracking-[1.5px] uppercase px-4 py-2 rounded-full mb-8"
+            style={{ background: "rgba(59,130,246,0.1)", borderColor: "rgba(59,130,246,0.25)", color: "#60a5fa" }}>
+            <span aria-hidden="true" className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-70 animate-ping" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-blue-400" />
+            </span>
+            Virtual Phone Numbers
+          </div>
 
-        <h1 id="hero-h1" className="vn-h1 font-serif text-[52px] sm:text-[64px] lg:text-[76px] font-semibold leading-[1.02] tracking-tight text-gray-900 max-w-[900px] mx-auto mb-7 overflow-hidden">
-          {"A phone number in".split(" ").map((word, i) => (
-            <span key={`l1-${i}`} className="inline-block mr-[0.18em]">{word}</span>
-          ))}
-          <span className="text-accent italic block">
-            {"any area code.".split(" ").map((word, i) => (
-              <span key={`l2-${i}`} className="inline-block mr-[0.18em]">{word}</span>
+          <h1 id="hero-h1" className="vn-h1 font-serif text-[48px] sm:text-[58px] lg:text-[70px] font-semibold leading-[1.02] tracking-tight max-w-[820px] mx-auto mb-6 overflow-hidden"
+            style={{ color: "#f1f5f9" }}>
+            {"A phone number in".split(" ").map((word, i) => (
+              <span key={`l1-${i}`} className="inline-block mr-[0.18em]">{word}</span>
             ))}
-          </span>
-        </h1>
+            <span className="italic block" style={{ color: "#60a5fa" }}>
+              {"any area code.".split(" ").map((word, i) => (
+                <span key={`l2-${i}`} className="inline-block mr-[0.18em]">{word}</span>
+              ))}
+            </span>
+          </h1>
 
-        <p className="vn-sub text-[18px] text-gray-500 max-w-[560px] mx-auto mb-10 leading-relaxed">
-          Virtual numbers give your business nationwide reach — routed to any device — without the office rent.
-        </p>
+          <p className="vn-sub text-[17px] max-w-[520px] mx-auto mb-9 leading-relaxed" style={{ color: "#94a3b8" }}>
+            Virtual numbers give your business nationwide reach — routed to any device — without the office rent.
+          </p>
 
-        <div className="vn-cta flex flex-wrap items-center justify-center gap-3 mb-14">
-          <PrimaryButton href="/pricing">Start 14-day free trial</PrimaryButton>
-          <motion.a href="/pricing"
-            whileHover={{ y: -1 }} whileTap={{ scale: 0.97 }}
-            className="inline-flex items-center gap-1.5 text-[15px] font-semibold text-gray-600 hover:text-accent transition-colors"
-          >
-            See pricing <ChevronRight aria-hidden="true" className="h-4 w-4" strokeWidth={2} />
-          </motion.a>
+          <div className="vn-cta flex flex-wrap items-center justify-center gap-3 mb-10">
+            <PrimaryButton href="/pricing">Start 14-day free trial</PrimaryButton>
+            <motion.a href="/pricing"
+              whileHover={{ y: -1 }} whileTap={{ scale: 0.97 }}
+              className="inline-flex items-center gap-1.5 text-[15px] font-semibold transition-colors"
+              style={{ color: "#64748b" }}
+            >
+              See pricing <ChevronRight aria-hidden="true" className="h-4 w-4" strokeWidth={2} />
+            </motion.a>
+          </div>
+
+          <dl className="flex flex-wrap justify-center gap-8 mb-12">
+            {STATS.map(({ value, label }) => (
+              <div key={label} className="vn-stat text-center">
+                <dt className="font-serif text-[26px] font-bold leading-none" style={{ color: "#f1f5f9" }}>{value}</dt>
+                <dd className="text-[10px] font-mono mt-1 uppercase tracking-wider" style={{ color: "#475569" }}>{label}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
 
-        <dl className="flex flex-wrap justify-center gap-8">
-          {STATS.map(({ value, label }) => (
-            <div key={label} className="vn-stat text-center">
-              <dt className="font-serif text-[28px] font-bold text-gray-900 leading-none">{value}</dt>
-              <dd className="text-[11px] font-mono text-gray-400 mt-1 uppercase tracking-wider">{label}</dd>
-            </div>
-          ))}
-        </dl>
+        {/* Dashboard visual — hero centerpiece */}
+        <div className="vn-dashboard relative">
+          {/* top fade chrome glow */}
+          <div aria-hidden className="absolute -top-4 left-1/2 -translate-x-1/2 w-3/4 h-8 rounded-full opacity-40"
+            style={{ background: "radial-gradient(ellipse, rgba(59,130,246,0.6), transparent 70%)", filter: "blur(12px)" }} />
+          <VirtualDashboard />
+          {/* bottom blend into white */}
+          <div aria-hidden className="absolute bottom-0 left-0 right-0 h-20 pointer-events-none"
+            style={{ background: "linear-gradient(to bottom, transparent, #f8fafc)" }} />
+        </div>
       </div>
     </section>
   )
